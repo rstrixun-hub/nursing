@@ -8,7 +8,7 @@ const generateStudentId = () => 'student_' + Math.random().toString(36).substrin
 export const useQuizStore = create(
   persist(
     (set, get) => ({
-      lang: 'ar',
+      lang: 'en',
       studentId: null, 
       currentStep: 0,
 
