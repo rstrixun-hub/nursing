@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-darkBg text-white m-0 min-h-screen flex flex-col;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
