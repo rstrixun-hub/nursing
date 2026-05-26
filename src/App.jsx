@@ -6,10 +6,13 @@ import AdminDashboard from './components/AdminDashboard';
 import QuizScreen from './components/QuizScreen';
 import AdminLogin from './components/AdminLogin';
 import VideoScreen from './components/VideoScreen';
+import ResultsScreen from './components/ResultsScreen';
+import { db } from './firebase/config';
+import { getDocs, collection } from 'firebase/firestore';
 const TRANSLATIONS = {
   ar: {
-    welcome: "نظام التقييم الذكي",
-    welcomeSub: "رحلة تعليمية متكاملة — من التقييم إلى الإتقان",
+    appTitle: "استكشاف الذكاء البحثي",
+    welcomeSub: "نظام ذكي يقيّم مستواك قبل التعلم وبعده — لترى أثر المعرفة بوضوح",
     start: "ابدأ الآن",
     step1: "التقييم المبدئي",
     step1Sub: "قِس مستواك",
@@ -26,9 +29,9 @@ const TRANSLATIONS = {
     doneSub: "لقد أتممت جميع مراحل التقييم بنجاح"
   },
   en: {
-    welcome: "Smart Assessment System",
-    welcomeSub: "A complete learning journey — from assessment to mastery",
-    start: "Begin Your Journey",
+    appTitle: "Research Intelligence Explore",
+    welcomeSub: "A smart system that evaluates your level before and after learning — to see the real impact of knowledge",
+    start: "Start Now",
     step1: "Pre-Assessment",
     step1Sub: "Measure your level",
     step2: "Learning Video",
@@ -102,12 +105,10 @@ const VideoIcon = () => (
 );
 
 const SettingsIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
   </svg>
 );
-
 // ── STEP NODE COMPONENT ────────────────────────────────
 const StepNode = ({ number, title, subtitle, icon: Icon, state, onClick, lang }) => {
   const isActive = state === 'active';
@@ -192,6 +193,135 @@ const Connector = ({ fromDone, lang }) => (
     </div>
   </div>
 );
+function StatsCircles({ lang }) {
+  const [stats, setStats] = React.useState({ completed: 0, dropped: 0, partial: 0 });
+  const [tooltip, setTooltip] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'sessions'));
+        let completed = 0, dropped = 0, partial = 0;
+        snap.forEach(d => {
+          const s = d.data();
+          if (s.currentStep >= 4) completed++;
+          else if (!s.answers_pre || Object.keys(s.answers_pre).length === 0) dropped++;
+          else partial++;
+        });
+        setStats({ completed, dropped, partial });
+      } catch { }
+    };
+    fetchStats();
+  }, []);
+
+  const items = [
+    {
+      value: stats.completed,
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22 }}>
+          <path d="M18 2H6v7a6 6 0 0012 0V2z" /><path d="M6 9H4.5a2.5 2.5 0 010-5H6" /><path d="M18 9h1.5a2.5 2.5 0 000-5H18" /><path d="M4 22h16" />
+        </svg>
+      ),
+      color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)',
+      label: lang === 'ar' ? '🏆 أكملوا الرحلة' : '🏆 Completed Journey',
+      desc: lang === 'ar' ? 'طلاب أتموا التقييم المبدئي والفيديو والتقييم النهائي بنجاح' : 'Students who finished all 3 stages successfully',
+    },
+    {
+      value: stats.partial,
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22 }}>
+          <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+        </svg>
+      ),
+      color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.25)',
+      label: lang === 'ar' ? '⏳ لم يكملوا بعد' : '⏳ In Progress',
+      desc: lang === 'ar' ? 'طلاب بدأوا التقييم المبدئي أو شاهدوا الفيديو لكن لم يُنهوا الاختبار النهائي' : 'Students who started but haven\'t finished the post-assessment yet',
+    },
+    {
+      value: stats.dropped,
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22 }}>
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><line x1="23" y1="11" x2="17" y2="11" />
+        </svg>
+      ),
+      color: '#f87171', bg: 'rgba(248,113,113,0.12)', border: 'rgba(248,113,113,0.25)',
+      label: lang === 'ar' ? '👤 تسربوا' : '👤 Dropped Out',
+      desc: lang === 'ar' ? 'طلاب فتحوا النظام لكن لم يبدأوا أي اختبار' : 'Students who opened the system but never started any assessment',
+    },
+  ];
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
+      <style>{`
+        @keyframes tooltipIn {
+          from { opacity: 0; transform: translateY(8px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .stat-circle {
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-circle:hover {
+          transform: scale(1.1) translateY(-4px);
+        }
+      `}</style>
+
+      {items.map((item, i) => (
+        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, position: 'relative' }}>
+          <div
+            className="stat-circle"
+            onClick={() => setTooltip(tooltip === i ? null : i)}
+            style={{
+              width: 72, height: 72, borderRadius: '50%',
+              background: item.bg,
+              border: `2px solid ${item.border}`,
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', gap: 2,
+              boxShadow: `0 0 20px ${item.bg}`,
+              cursor: 'pointer',
+            }}
+          >
+            <span style={{ color: item.color }}>{item.icon}</span>
+            <span style={{ fontSize: 13, fontWeight: 900, color: item.color, lineHeight: 1 }}>{item.value}</span>
+          </div>
+
+          {tooltip === i && (
+            <div style={{
+              position: 'fixed',
+              bottom: '40%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(10,15,30,0.97)',
+              border: `1px solid ${item.border}`,
+              borderRadius: 14,
+              padding: '12px 16px',
+              width: 200,
+              zIndex: 100,
+              boxShadow: `0 8px 32px rgba(0,0,0,0.5), 0 0 20px ${item.bg}`,
+              animation: 'tooltipIn 0.2s ease both',
+              textAlign: lang === 'ar' ? 'right' : 'left',
+              direction: lang === 'ar' ? 'rtl' : 'ltr',
+            }}>
+              {/* triangle */}
+              <div style={{
+                position: 'absolute', top: -7, left: '50%',
+                transform: 'translateX(-50%)',
+                width: 12, height: 7,
+                background: 'rgba(10,15,30,0.97)',
+                clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                borderTop: `1px solid ${item.border}`,
+              }} />
+              <p style={{ fontSize: 13, fontWeight: 800, color: item.color, marginBottom: 6 }}>{item.label}</p>
+              <p style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.6 }}>{item.desc}</p>
+              <p style={{ fontSize: 18, fontWeight: 900, color: item.color, marginTop: 8 }}>
+                {item.value} {lang === 'ar' ? 'طالب' : 'students'}
+              </p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 export default function App() {
   const { lang, currentStep, toggleLanguage, startSession, setStep } = useQuizStore();
   const t = TRANSLATIONS[lang];
@@ -326,11 +456,31 @@ export default function App() {
           box-shadow: 0 0 50px rgba(6,182,212,0.6), 0 8px 30px rgba(0,0,0,0.4);
         }
 
-        .header-blur {
-          background: rgba(6, 11, 24, 0.7);
-          backdrop-filter: blur(16px);
-          border-bottom: 1px solid rgba(148,163,184,0.06);
-        }
+       .header-blur {
+  background: linear-gradient(90deg, rgba(6,182,212,0.15) 0%, rgba(3,105,161,0.12) 50%, rgba(6,182,212,0.15) 100%);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(6,182,212,0.2);
+  padding-top: 14px;
+  padding-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-blur::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #06b6d4, #0ea5e9, #06b6d4, transparent);
+  animation: waveSlide 3s linear infinite;
+}
+
+@keyframes waveSlide {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
 
         .lang-btn {
           border: 1px solid rgba(6,182,212,0.3);
@@ -402,7 +552,7 @@ export default function App() {
         </div>        <div className="grid-overlay" />
 
         {/* ── HEADER ── */}
-        <header className="header-blur sticky top-0 z-50 px-4 sm:px-6 py-3 flex items-center justify-between">
+        <header dir="ltr" className="header-blur sticky top-0 z-50 px-4 sm:px-6 py-4 flex items-center justify-between">
           <button
             onClick={() => { setShowAdmin(!showAdmin); setIsStepActive(false); }}
             className="admin-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium"
@@ -452,53 +602,28 @@ export default function App() {
                 <img
                   src={logoImg}
                   className="w-52 h-52 sm:w-60 sm:h-60 object-contain mx-auto mb-2 -mt-12"
-
                   alt="RST RIX"
                 />
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">{t.welcome}</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">{t.appTitle}</h1>
               </div>
 
               <p className="welcome-sub text-slate-400 text-sm sm:text-base max-w-sm leading-relaxed">
                 {t.welcomeSub}
               </p>
 
-              {/* Mini step preview */}
-              <div className="welcome-sub flex items-center gap-2 sm:gap-3 text-xs text-slate-600">
-                {['①', '②', '③'].map((n, i) => (
-                  <React.Fragment key={i}>
-                    <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/50 font-bold">{n}</span>
-                    {i < 2 && <span className="text-slate-700">→</span>}
-                  </React.Fragment>
-                ))}
-              </div>
-
-              <button onClick={startSession} className="welcome-btn start-btn px-10 sm:px-14 py-4 rounded-2xl text-lg sm:text-xl font-black text-white">
+              {/* Stats circles */}
+              <StatsCircles lang={lang} />
+              <button onClick={async () => {
+                await startSession();
+              }} className="welcome-btn start-btn px-10 sm:px-14 py-4 rounded-2xl text-lg sm:text-xl font-black text-white">
                 {t.start}
               </button>
 
-              <p className="welcome-btn text-slate-600 text-xs mt-2">
-                Developed by <span className="text-cyan-500/70 font-semibold">Abdelrahman Abdelaziz</span>
-              </p>
             </div>
 
             /* ── COMPLETION SCREEN ── */
           ) : currentStep === 4 ? (
-            <div className="done-card rounded-2xl p-8 sm:p-12 max-w-md w-full text-center">
-              <div className="w-20 h-20 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mx-auto mb-6 text-emerald-400"
-                style={{ boxShadow: '0 0 40px rgba(16,185,129,0.2)' }}>
-                <TrophyIcon />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white mb-3">{t.doneTitle}</h2>
-              <p className="text-slate-400 text-sm leading-relaxed">{t.doneSub}</p>
-
-              <div className="flex justify-center gap-2 mt-6">
-                {[1, 2, 3].map(n => (
-                  <div key={n} className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                    <CheckIcon />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ResultsScreen />
 
             /* ── STEPS JOURNEY SCREEN ── */
           ) : (
@@ -558,7 +683,16 @@ export default function App() {
           )}
 
         </main>
+        <p style={{ textAlign: 'center', width: '100%' }} className="text-slate-600 text-xs pb-4">
+          {lang === 'ar' ? 'تطوير ' : 'Developed by '}
+          <span className="text-cyan-500/70 font-semibold">Abdelrahman Abdelaziz</span>
+        </p>
       </div>
+      <div style={{
+        height: '4px',
+        width: '100%',
+        background: 'linear-gradient(90deg, transparent, #06b6d4, #0ea5e9, #06b6d4, transparent)'
+      }} />
     </>
   );
 }

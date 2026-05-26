@@ -6,109 +6,109 @@ import AnalyticsDashboard from './AnalyticsDashboard';
 const Icons = {
   Questions: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-      <rect x="9" y="3" width="6" height="4" rx="1"/>
-      <path d="M9 12h6M9 16h4"/>
+      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+      <rect x="9" y="3" width="6" height="4" rx="1" />
+      <path d="M9 12h6M9 16h4" />
     </svg>
   ),
   Videos: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <rect x="2" y="4" width="20" height="16" rx="3"/>
-      <path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"/>
+      <rect x="2" y="4" width="20" height="16" rx="3" />
+      <path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none" />
     </svg>
   ),
   // أيقونة التحليلات الجديدة
   Chart: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
     </svg>
   ),
   ChevronLeft: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M15 18l-6-6 6-6"/>
+      <path d="M15 18l-6-6 6-6" />
     </svg>
   ),
   ChevronRight: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M9 18l6-6-6-6"/>
+      <path d="M9 18l6-6-6-6" />
     </svg>
   ),
   Save: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-      <polyline points="17 21 17 13 7 13 7 21"/>
-      <polyline points="7 3 7 8 15 8"/>
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+      <polyline points="17 21 17 13 7 13 7 21" />
+      <polyline points="7 3 7 8 15 8" />
     </svg>
   ),
   Plus: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   ),
   Trash: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <polyline points="3 6 5 6 21 6"/>
-      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
-      <path d="M10 11v6M14 11v6"/>
-      <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+      <path d="M10 11v6M14 11v6" />
+      <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
     </svg>
   ),
   Edit: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
     </svg>
   ),
   Check: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <polyline points="20 6 9 17 4 12"/>
+      <polyline points="20 6 9 17 4 12" />
     </svg>
   ),
   Error: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
   ),
   Globe: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="2" y1="12" x2="22" y2="12"/>
-      <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
     </svg>
   ),
   Link: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
-      <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+      <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
     </svg>
   ),
   Loader: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 animate-spin">
-      <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.25" fill="currentColor" stroke="none"/>
-      <path d="M12 3a9 9 0 019 9" strokeLinecap="round"/>
+      <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.25" fill="currentColor" stroke="none" />
+      <path d="M12 3a9 9 0 019 9" strokeLinecap="round" />
     </svg>
   ),
   Film: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
-      <line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/>
-      <line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/>
-      <line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/>
-      <line x1="17" y1="7" x2="22" y2="7"/>
+      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+      <line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" />
+      <line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" />
+      <line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="17" x2="22" y2="17" />
+      <line x1="17" y1="7" x2="22" y2="7" />
     </svg>
   ),
   Users: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-      <path d="M16 3.13a4 4 0 010 7.75"/>
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87" />
+      <path d="M16 3.13a4 4 0 010 7.75" />
     </svg>
   ),
   AlertTriangle: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   ),
 };
@@ -137,7 +137,7 @@ const textareaCls = (dir = 'rtl') =>
 
 // ── CONFIRM DIALOG ──
 const ConfirmDialog = ({ message, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:'rgba(0,0,0,0.7)', backdropFilter:'blur(6px)'}}>
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
     <div className="glass-card rounded-2xl p-6 max-w-sm w-full border border-red-500/20">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/25 flex items-center justify-center text-red-400">
@@ -262,6 +262,9 @@ export default function AdminDashboard() {
         setMessage({ text: 'تم إضافة السؤال الجديد بنجاح', type: 'success' });
       }
       await loadQuestions();
+      await setDoc(doc(db, 'config', 'version'), {
+        questionsVersion: new Date().toISOString(),
+      }, { merge: true });
     } catch {
       setMessage({ text: 'حدث خطأ أثناء الحفظ، حاول مرة أخرى', type: 'error' });
     }
@@ -374,6 +377,9 @@ export default function AdminDashboard() {
       });
       setMessage({ text: `تم حفظ الصفحة التعليمية رقم ${videoStep} بنجاح`, type: 'success' });
       await loadVideos();
+      await setDoc(doc(db, 'config', 'version'), {
+        videosVersion: new Date().toISOString(),
+      }, { merge: true });
     } catch {
       setMessage({ text: 'حدث خطأ أثناء حفظ البيانات', type: 'error' });
     }
@@ -528,7 +534,7 @@ export default function AdminDashboard() {
               <p className="text-slate-500 text-xs sm:text-sm pr-3.5">إدارة المحتوى التعليمي — الأسئلة والفيديوهات</p>
             </div>
             <div className="flex flex-col items-end gap-1">
-              <span className="text-slate-500 text-xs" style={{fontFamily:'JetBrains Mono,monospace'}}>
+              <span className="text-slate-500 text-xs" style={{ fontFamily: 'JetBrains Mono,monospace' }}>
                 {questions.length} سؤال · {videos.length} فيديو
               </span>
               <div className="flex gap-1">
@@ -542,25 +548,23 @@ export default function AdminDashboard() {
           {/* ── TAB SWITCHER ── */}
           <div className="glass-card rounded-2xl p-1.5 mb-5 flex gap-1.5 flex-wrap">
             {[
-              { id: 'questions', label: 'إدارة الأسئلة',       short: 'الأسئلة',    sub: `${questions.length} سؤال`, Icon: Icons.Questions },
-              { id: 'videos',    label: 'الفيديوهات التعليمية', short: 'الفيديوهات', sub: `${videos.length} مرحلة`,  Icon: Icons.Videos    },
-              { id: 'analytics', label: 'التحليل والبيانات',    short: 'البيانات',   sub: `إحصائيات ذكية`,           Icon: Icons.Chart     },
+              { id: 'questions', label: 'إدارة الأسئلة', short: 'الأسئلة', sub: `${questions.length} سؤال`, Icon: Icons.Questions },
+              { id: 'videos', label: 'الفيديوهات التعليمية', short: 'الفيديوهات', sub: `${videos.length} مرحلة`, Icon: Icons.Videos },
+              { id: 'analytics', label: 'التحليل والبيانات', short: 'البيانات', sub: `إحصائيات ذكية`, Icon: Icons.Chart },
             ].map(({ id, label, short, sub, Icon }) => (
               <button
                 key={id}
                 onClick={() => { setActiveTab(id); setMessage({ text: '', type: '' }); }}
-                className={`flex-1 min-w-[100px] flex items-center justify-center gap-2.5 px-4 py-3 sm:py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
-                  activeTab === id
-                    ? 'bg-gradient-to-l from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-500/25 shadow-lg glow-cyan'
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'
-                }`}
+                className={`flex-1 min-w-[100px] flex items-center justify-center gap-2.5 px-4 py-3 sm:py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${activeTab === id
+                  ? 'bg-gradient-to-l from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-500/25 shadow-lg glow-cyan'
+                  : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'
+                  }`}
               >
                 <Icon />
                 <span className="hidden sm:inline">{label}</span>
                 <span className="sm:hidden">{short}</span>
-                <span className={`hidden sm:inline text-xs px-2 py-0.5 rounded-full font-medium ${
-                  activeTab === id ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-700/60 text-slate-500'
-                }`}>{sub}</span>
+                <span className={`hidden sm:inline text-xs px-2 py-0.5 rounded-full font-medium ${activeTab === id ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-700/60 text-slate-500'
+                  }`}>{sub}</span>
               </button>
             ))}
           </div>
@@ -568,12 +572,11 @@ export default function AdminDashboard() {
           {/* ── MESSAGE BANNER ── */}
           {message.text && (
             <div
-              className={`mb-5 flex items-center gap-3 p-4 rounded-xl border font-medium text-sm ${
-                message.type === 'success'
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                  : 'bg-red-500/10 border-red-500/20 text-red-400'
-              }`}
-              style={{animation:'fadeSlideIn .25s ease-out'}}
+              className={`mb-5 flex items-center gap-3 p-4 rounded-xl border font-medium text-sm ${message.type === 'success'
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                : 'bg-red-500/10 border-red-500/20 text-red-400'
+                }`}
+              style={{ animation: 'fadeSlideIn .25s ease-out' }}
             >
               <span className="flex-shrink-0">
                 {message.type === 'success' ? <Icons.Check /> : <Icons.Error />}
@@ -684,11 +687,10 @@ export default function AdminDashboard() {
                         <div key={idx} className="group rounded-xl border border-slate-700/50 bg-slate-900/40 p-3 sm:p-4 hover:border-slate-600/60 transition-all">
                           <div className="flex items-center justify-between gap-3 mb-3">
                             <div className="flex items-center gap-2">
-                              <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black transition-all ${
-                                qFormData.correctAnswer === idx
-                                  ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'
-                                  : 'bg-slate-800 border border-slate-700 text-slate-400'
-                              }`}>
+                              <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black transition-all ${qFormData.correctAnswer === idx
+                                ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'
+                                : 'bg-slate-800 border border-slate-700 text-slate-400'
+                                }`}>
                                 {OPTION_LETTERS[idx]}
                               </span>
                               <span className={`text-xs font-semibold ${qFormData.correctAnswer === idx ? 'text-emerald-400' : 'text-slate-500'}`}>
@@ -758,17 +760,16 @@ export default function AdminDashboard() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className={`flex-1 flex items-center justify-center gap-2.5 py-3 sm:py-3.5 rounded-xl text-white font-bold text-sm transition-all ${
-                          loading ? 'bg-slate-700 cursor-not-allowed'
-                            : isNewQuestion ? 'shimmer-btn glow-cyan hover:scale-[1.01]'
+                        className={`flex-1 flex items-center justify-center gap-2.5 py-3 sm:py-3.5 rounded-xl text-white font-bold text-sm transition-all ${loading ? 'bg-slate-700 cursor-not-allowed'
+                          : isNewQuestion ? 'shimmer-btn glow-cyan hover:scale-[1.01]'
                             : 'bg-gradient-to-l from-blue-600 to-cyan-600 glow-cyan hover:scale-[1.01]'
-                        }`}
+                          }`}
                       >
                         {loading
                           ? <><Icons.Loader /><span>جاري الحفظ...</span></>
                           : isNewQuestion
-                          ? <><Icons.Plus /><span>حفظ ونشر السؤال الجديد</span></>
-                          : <><Icons.Save /><span>تحديث السؤال</span></>
+                            ? <><Icons.Plus /><span>حفظ ونشر السؤال الجديد</span></>
+                            : <><Icons.Save /><span>تحديث السؤال</span></>
                         }
                       </button>
                     </div>
@@ -809,11 +810,10 @@ export default function AdminDashboard() {
                         key={v.step}
                         type="button"
                         onClick={() => { setVideoStep(v.step); setMessage({ text: '', type: '' }); }}
-                        className={`step-pill flex flex-col items-center gap-1 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all ${
-                          videoStep === v.step
-                            ? 'active bg-gradient-to-b from-cyan-600/25 to-blue-600/15 border-cyan-500/30 text-cyan-300 shadow glow-cyan'
-                            : 'bg-slate-900/60 border-slate-700/50 text-slate-500 hover:text-slate-300 hover:border-slate-600/60'
-                        }`}
+                        className={`step-pill flex flex-col items-center gap-1 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all ${videoStep === v.step
+                          ? 'active bg-gradient-to-b from-cyan-600/25 to-blue-600/15 border-cyan-500/30 text-cyan-300 shadow glow-cyan'
+                          : 'bg-slate-900/60 border-slate-700/50 text-slate-500 hover:text-slate-300 hover:border-slate-600/60'
+                          }`}
                       >
                         <Icons.Film />
                         <span className="text-xs">{v.step}</span>
@@ -835,7 +835,7 @@ export default function AdminDashboard() {
                       >
                         <Icons.Film />
                         <span className="text-xs">{videoStep}</span>
-                        <span className="badge-new" style={{fontSize:'8px',padding:'1px 5px'}}>جديد</span>
+                        <span className="badge-new" style={{ fontSize: '8px', padding: '1px 5px' }}>جديد</span>
                       </button>
                     )}
                   </div>
@@ -862,7 +862,7 @@ export default function AdminDashboard() {
                           <div className="flex-1 h-2 rounded-full bg-slate-800 overflow-hidden">
                             <div
                               className="h-full rounded-full bg-gradient-to-l from-cyan-500 to-blue-500 transition-all duration-700"
-                              style={{width:`${pct}%`}}
+                              style={{ width: `${pct}%` }}
                             />
                           </div>
                           <span className="text-cyan-400 text-xs font-bold w-12 text-right shrink-0">{count} طالب</span>
@@ -931,7 +931,7 @@ export default function AdminDashboard() {
                           dir="ltr"
                           className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/60 text-white text-sm placeholder-slate-600
                             focus:outline-none focus:border-cyan-500/70 focus:ring-2 focus:ring-cyan-500/20 transition-all"
-                          style={{fontFamily:'JetBrains Mono,monospace', fontSize:'13px'}}
+                          style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: '13px' }}
                         />
                       </div>
                     </div>
@@ -953,17 +953,16 @@ export default function AdminDashboard() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 rounded-xl text-white font-bold text-sm transition-all ${
-                          loading ? 'bg-slate-700 cursor-not-allowed'
-                            : isNewVideo ? 'shimmer-btn glow-cyan hover:scale-[1.01]'
+                        className={`flex-1 flex items-center justify-center gap-2.5 py-3.5 rounded-xl text-white font-bold text-sm transition-all ${loading ? 'bg-slate-700 cursor-not-allowed'
+                          : isNewVideo ? 'shimmer-btn glow-cyan hover:scale-[1.01]'
                             : 'bg-gradient-to-l from-emerald-600 to-teal-500 glow-emerald hover:scale-[1.01]'
-                        }`}
+                          }`}
                       >
                         {loading
                           ? <><Icons.Loader /><span>جاري الحفظ...</span></>
                           : isNewVideo
-                          ? <><Icons.Plus /><span>نشر المرحلة الجديدة {videoStep}</span></>
-                          : <><Icons.Save /><span>حفظ وتحديث المرحلة {videoStep}</span></>
+                            ? <><Icons.Plus /><span>نشر المرحلة الجديدة {videoStep}</span></>
+                            : <><Icons.Save /><span>حفظ وتحديث المرحلة {videoStep}</span></>
                         }
                       </button>
                     </div>
