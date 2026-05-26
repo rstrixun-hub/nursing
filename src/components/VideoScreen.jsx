@@ -403,23 +403,24 @@ export default function VideoScreen({ onComplete }) {
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
 
-        .vscreen-root {
-          font-family: 'IBM Plex Sans Arabic', sans-serif;
-          direction: ${isAr ? 'rtl' : 'ltr'};
-          min-height: 100dvh;
-          padding: 24px 16px 40px;
-          background:
-            radial-gradient(ellipse 80% 50% at 10% 0%,  rgba(6,182,212,.08) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 40% at 90% 100%, rgba(99,102,241,.07) 0%, transparent 60%),
-            #070d1a;
-        }
+      /* ← كان background: hardcoded dark */
+.vscreen-root {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  direction: ${isAr ? 'rtl' : 'ltr'};
+  min-height: 100dvh;
+  padding: 24px 16px 40px;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%,  rgba(6,182,212,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(99,102,241,.07) 0%, transparent 60%),
+    var(--bg-main);
+}
 
-        .vs-card {
-          background: rgba(15,23,42,.9);
-          backdrop-filter: blur(24px);
-          border: 1px solid rgba(148,163,184,.08);
-        }
-
+/* ← كان rgba(15,23,42,.9) */
+.vs-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-subtle);
+}
         /* ── Progress Rail ── */
         .vs-rail {
           display: flex;
@@ -591,6 +592,44 @@ export default function VideoScreen({ onComplete }) {
         .animate-spin { animation: spin 1s linear infinite; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
         .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+        /* ── Light theme overrides ── */
+:root[data-theme="light"] .vscreen-root h1,
+:root[data-theme="light"] .vscreen-root h2 {
+  color: var(--text-primary) !important;
+}
+:root[data-theme="light"] .vscreen-root .text-white {
+  color: var(--text-primary) !important;
+}
+:root[data-theme="light"] .vscreen-root .text-slate-300,
+:root[data-theme="light"] .vscreen-root .text-slate-400 {
+  color: var(--text-secondary) !important;
+}
+:root[data-theme="light"] .vscreen-root .text-slate-500,
+:root[data-theme="light"] .vscreen-root .text-slate-600 {
+  color: var(--text-muted) !important;
+}
+:root[data-theme="light"] .vscreen-root .border-slate-800\/80 {
+  border-color: var(--border-subtle) !important;
+}
+:root[data-theme="light"] .vs-btn-ghost {
+  background: rgba(148,163,184,0.15) !important;
+  border-color: rgba(148,163,184,0.3) !important;
+  color: var(--text-secondary) !important;
+}
+:root[data-theme="light"] .vs-btn-ghost:hover:not(:disabled) {
+  background: rgba(148,163,184,0.25) !important;
+}
+:root[data-theme="light"] .vs-gate {
+  background: rgba(6,182,212,0.06);
+  border-color: rgba(6,182,212,0.3);
+}
+:root[data-theme="light"] .vs-desc {
+  background: rgba(99,102,241,0.06);
+  border-color: rgba(99,102,241,0.2);
+}
+:root[data-theme="light"] .vs-rail-segment {
+  background: rgba(148,163,184,0.3);
+}
 
         /* ── Badges ── */
         .vs-badge-done {

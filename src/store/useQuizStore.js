@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { signInAnonymously } from 'firebase/auth';
-import { doc, setDoc, getDoc, getDoc as getDocAlias } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
+
 const generateStudentId = () => 'student_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
 export const useQuizStore = create(
@@ -11,8 +12,11 @@ export const useQuizStore = create(
       lang: 'en',
       studentId: null,
       currentStep: 0,
+      theme: 'dark',
 
       toggleLanguage: () => set((state) => ({ lang: state.lang === 'ar' ? 'en' : 'ar' })),
+      toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
+
       startSession: async () => {
         try {
           await signInAnonymously(auth);
@@ -40,14 +44,12 @@ export const useQuizStore = create(
             const savedData = docSnap.data();
             const savedVersion = savedData.contentVersion || '';
 
-            // طالب خلص بس مش عنده version — احفظها من غير reset
             if (savedData.currentStep === 4 && savedVersion === '' && latestVersion !== '') {
               await setDoc(userRef, {
                 contentVersion: latestVersion,
               }, { merge: true });
               set({ currentStep: 4 });
 
-              // في تحديث حقيقي من الدكتور — افتح الاختبارات من أول
             } else if (latestVersion !== '' && savedVersion !== latestVersion && savedData.currentStep === 4) {
               await setDoc(userRef, {
                 currentStep: 1,
@@ -65,6 +67,7 @@ export const useQuizStore = create(
           alert("حدث خطأ في بدء الجلسة، تأكد من اتصال الإنترنت.");
         }
       },
+
       setStep: async (step) => {
         set({ currentStep: step });
 
@@ -83,7 +86,8 @@ export const useQuizStore = create(
       partialize: (state) => ({
         lang: state.lang,
         studentId: state.studentId,
-        currentStep: state.currentStep
+        currentStep: state.currentStep,
+        theme: state.theme,
       }),
     }
   )

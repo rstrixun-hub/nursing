@@ -80,7 +80,7 @@ function CircularScore({ percent, size = 100, color, label, sublabel }) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
             <div style={{ position: 'relative', width: size, height: size }}>
                 <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+                    <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--circle-track)" strokeWidth="8" />
                     <circle
                         cx={size / 2} cy={size / 2} r={r} fill="none"
                         stroke={color} strokeWidth="8"
@@ -94,8 +94,8 @@ function CircularScore({ percent, size = 100, color, label, sublabel }) {
                     <span style={{ fontSize: 18, fontWeight: 900, color }}>{percent}%</span>
                 </div>
             </div>
-            {label && <p style={{ fontSize: 12, fontWeight: 700, color: '#cbd5e1', textAlign: 'center' }}>{label}</p>}
-            {sublabel && <p style={{ fontSize: 10, color: '#475569', textAlign: 'center' }}>{sublabel}</p>}
+            {label && <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textAlign: 'center' }}>{label}</p>}
+            {sublabel && <p style={{ fontSize: 10, color: 'var(--text-muted)', textAlign: 'center' }}>{sublabel}</p>}
         </div>
     );
 }
@@ -146,6 +146,7 @@ export default function ResultsScreen() {
     if (loading) {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 300, gap: 16 }}>
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
                 <div style={{
                     width: 44, height: 44, borderRadius: '50%',
                     border: '3px solid rgba(6,182,212,0.15)',
@@ -153,12 +154,10 @@ export default function ResultsScreen() {
                     animation: 'spin 0.8s linear infinite',
                 }} />
                 <p style={{ color: '#67e8f9', fontSize: 14 }}>{t.loading}</p>
-                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             </div>
         );
     }
 
-    // calculate scores
     const answerToIdx = (ans) => ({ 'A': '0', 'B': '1', 'C': '2', 'D': '3', 'E': '4' })[ans] ?? ans;
     const preCorrect = questions.filter(q => q.correctAnswer !== undefined && answerToIdx(String(answersPre[q.id] ?? '')) === String(q.correctAnswer)).length;
     const postCorrect = questions.filter(q => q.correctAnswer !== undefined && answerToIdx(String(answersPost[q.id] ?? '')) === String(q.correctAnswer)).length;
@@ -171,22 +170,22 @@ export default function ResultsScreen() {
     const improvementColor = diff > 0 ? '#10b981' : diff === 0 ? '#94a3b8' : '#f87171';
 
     return (
-        <div dir={isRTL ? 'rtl' : 'ltr'} style={styles.root}>
+        <div dir={isRTL ? 'rtl' : 'ltr'} className="results-root" style={styles.root}>
             <style>{cssString}</style>
 
             {/* ── HEADER ── */}
-            <div style={styles.header}>
-                <div style={styles.trophyWrap}>
+            <div className="results-header" style={styles.header}>
+                <div className="results-trophy" style={styles.trophyWrap}>
                     <TrophyIcon />
                 </div>
                 <div>
-                    <h2 style={styles.title}>{t.doneTitle}</h2>
-                    <p style={styles.sub}>{t.doneSub}</p>
+                    <h2 className="results-title" style={styles.title}>{t.doneTitle}</h2>
+                    <p className="results-sub" style={styles.sub}>{t.doneSub}</p>
                 </div>
             </div>
 
             {/* ── SCORE SUMMARY ── */}
-            <div style={styles.scoreCard}>
+            <div className="results-score-card" style={styles.scoreCard}>
                 <div style={styles.scoreRow}>
                     <CircularScore
                         percent={prePercent}
@@ -219,11 +218,11 @@ export default function ResultsScreen() {
                 <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 6 }}>
-                            <span style={{ color: '#64748b', fontWeight: 700 }}>{t.preScore}</span>
-                            <span style={{ color: '#64748b' }}>{prePercent}%</span>
+                            <span style={{ color: 'var(--text-muted)', fontWeight: 700 }}>{t.preScore}</span>
+                            <span style={{ color: 'var(--text-muted)' }}>{prePercent}%</span>
                         </div>
-                        <div style={styles.barTrack}>
-                            <div className="results-bar" style={{ ...styles.barFill, width: `${prePercent}%`, background: '#475569' }} />
+                        <div className="results-bar-track" style={styles.barTrack}>
+                            <div className="results-bar" style={{ ...styles.barFill, width: `${prePercent}%`, background: 'var(--bar-pre)' }} />
                         </div>
                     </div>
                     <div>
@@ -231,7 +230,7 @@ export default function ResultsScreen() {
                             <span style={{ color: '#06b6d4', fontWeight: 700 }}>{t.postScore}</span>
                             <span style={{ color: '#06b6d4' }}>{postPercent}%</span>
                         </div>
-                        <div style={styles.barTrack}>
+                        <div className="results-bar-track" style={styles.barTrack}>
                             <div className="results-bar" style={{ ...styles.barFill, width: `${postPercent}%`, background: 'linear-gradient(90deg,#06b6d4,#3b82f6)', boxShadow: '0 0 8px rgba(6,182,212,0.5)' }} />
                         </div>
                     </div>
@@ -242,9 +241,6 @@ export default function ResultsScreen() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {questions.map((q, idx) => {
                     const qText = q.question?.[lang] || q.question?.ar || q.question?.en || '—';
-                    const options = Array.isArray(q.options)
-                        ? q.options.map((opt, i) => [String(i), opt])
-                        : Object.entries(q.options || {});
                     const correctKey = String(q.correctAnswer);
 
                     const answerToIndex = (ans) => {
@@ -275,8 +271,8 @@ export default function ResultsScreen() {
                         improved: { bg: 'rgba(16,185,129,0.06)', border: 'rgba(16,185,129,0.2)', badge: '#10b981', badgeBg: 'rgba(16,185,129,0.12)' },
                         declined: { bg: 'rgba(248,113,113,0.06)', border: 'rgba(248,113,113,0.2)', badge: '#f87171', badgeBg: 'rgba(248,113,113,0.12)' },
                         both: { bg: 'rgba(6,182,212,0.04)', border: 'rgba(6,182,212,0.15)', badge: '#06b6d4', badgeBg: 'rgba(6,182,212,0.1)' },
-                        neither: { bg: 'rgba(30,41,59,0.6)', border: 'rgba(148,163,184,0.08)', badge: '#94a3b8', badgeBg: 'rgba(148,163,184,0.08)' },
-                        none: { bg: 'rgba(30,41,59,0.6)', border: 'rgba(148,163,184,0.08)', badge: '#475569', badgeBg: 'rgba(100,116,139,0.1)' },
+                        neither: { bg: 'var(--qcard-neither-bg)', border: 'var(--qcard-neither-border)', badge: '#94a3b8', badgeBg: 'rgba(148,163,184,0.08)' },
+                        none: { bg: 'var(--qcard-neither-bg)', border: 'var(--qcard-neither-border)', badge: '#475569', badgeBg: 'rgba(100,116,139,0.1)' },
                     };
                     const sc = statusColors[status];
 
@@ -290,13 +286,13 @@ export default function ResultsScreen() {
                                 </span>
                             </div>
 
-                            <p style={styles.qText}>{qText}</p>
+                            <p className="result-qtext" style={styles.qText}>{qText}</p>
 
                             {/* answers grid */}
                             <div style={styles.answersGrid}>
                                 {/* PRE */}
                                 <div style={styles.answerBox}>
-                                    <p style={styles.answerLabel}>{t.yourAnswerPre}</p>
+                                    <p className="result-ans-label" style={styles.answerLabel}>{t.yourAnswerPre}</p>
                                     <div style={{ ...styles.answerPill, background: preIsCorrect ? 'rgba(16,185,129,0.12)' : 'rgba(248,113,113,0.1)', border: `1px solid ${preIsCorrect ? 'rgba(16,185,129,0.3)' : 'rgba(248,113,113,0.3)'}` }}>
                                         <span style={{ ...styles.answerIcon, background: preIsCorrect ? 'rgba(16,185,129,0.2)' : 'rgba(248,113,113,0.2)', color: preIsCorrect ? '#10b981' : '#f87171' }}>
                                             {preIsCorrect ? <CheckIcon /> : <XIcon />}
@@ -306,14 +302,14 @@ export default function ResultsScreen() {
                                                 {preAns ? getLabel(preAns) : '—'}
                                             </span>
                                             {preAns && (
-                                                <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{getOptionText(preAns)}</p>
+                                                <p className="result-opt-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{getOptionText(preAns)}</p>
                                             )}
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* arrow */}
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#334155', fontSize: 18, paddingTop: 20 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: 18, paddingTop: 20 }}>
                                     {isRTL ? '←' : '→'}
                                 </div>
 
@@ -329,7 +325,7 @@ export default function ResultsScreen() {
                                                 {postAns ? getLabel(postAns) : '—'}
                                             </span>
                                             {postAns && (
-                                                <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{getOptionText(postAns)}</p>
+                                                <p className="result-opt-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{getOptionText(postAns)}</p>
                                             )}
                                         </div>
                                     </div>
@@ -338,9 +334,9 @@ export default function ResultsScreen() {
 
                             {/* correct answer strip */}
                             {(!preIsCorrect || !postIsCorrect) && (
-                                <div style={styles.correctStrip}>
+                                <div className="result-correct-strip" style={styles.correctStrip}>
                                     <span style={styles.correctDot} />
-                                    <span style={{ fontSize: 11, color: '#64748b' }}>{t.correct}:</span>
+                                    <span className="result-correct-label" style={{ fontSize: 11, color: 'var(--text-muted)' }}>{t.correct}:</span>
                                     <span style={{ fontSize: 12, fontWeight: 800, color: '#10b981' }}>
                                         {getLabel(correctKey)} — {getOptionText(correctKey)}
                                     </span>
@@ -350,22 +346,12 @@ export default function ResultsScreen() {
                     );
                 })}
             </div>
+
             {/* completion badges + restart btn */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, marginTop: 8 }}>
                 <button
                     onClick={() => useQuizStore.setState({ currentStep: 0 })}
-                    style={{
-                        padding: '12px 32px',
-                        borderRadius: 14,
-                        background: 'linear-gradient(135deg, #0891b2, #1d4ed8)',
-                        border: '1px solid rgba(6,182,212,0.3)',
-                        color: '#fff',
-                        fontSize: 14,
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        fontFamily: 'inherit',
-                        boxShadow: '0 0 20px rgba(6,182,212,0.25)',
-                    }}
+                    className="results-back-btn"
                 >
                     {lang === 'ar' ? '← العودة للرئيسية' : 'Back to Home →'}
                 </button>
@@ -410,15 +396,13 @@ const styles = {
         color: '#34d399', flexShrink: 0,
         boxShadow: '0 0 24px rgba(16,185,129,0.2)',
     },
-    title: { fontSize: 20, fontWeight: 900, color: '#f1f5f9', margin: 0, marginBottom: 4 },
-    sub: { fontSize: 13, color: '#64748b', margin: 0 },
+    title: { fontSize: 20, fontWeight: 900, margin: 0, marginBottom: 4 },
+    sub: { fontSize: 13, margin: 0 },
     scoreCard: {
-        background: 'rgba(15,23,42,0.85)',
         border: '1px solid rgba(148,163,184,0.08)',
         borderRadius: 20,
         padding: '24px 20px',
         backdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.3)',
     },
     scoreRow: {
         display: 'flex',
@@ -430,7 +414,7 @@ const styles = {
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
     },
     barTrack: {
-        height: 10, background: 'rgba(148,163,184,0.08)',
+        height: 10,
         borderRadius: 999, overflow: 'hidden',
     },
     barFill: {
@@ -457,7 +441,7 @@ const styles = {
         borderRadius: 8, padding: '3px 10px',
     },
     qText: {
-        fontSize: 14, fontWeight: 600, color: '#e2e8f0',
+        fontSize: 14, fontWeight: 600,
         lineHeight: 1.7, margin: '0 0 14px 0',
     },
     answersGrid: {
@@ -467,7 +451,7 @@ const styles = {
     },
     answerBox: { display: 'flex', flexDirection: 'column', gap: 6 },
     answerLabel: {
-        fontSize: 10, fontWeight: 700, color: '#475569',
+        fontSize: 10, fontWeight: 700,
         textTransform: 'uppercase', letterSpacing: '0.05em',
     },
     answerPill: {
@@ -514,5 +498,126 @@ const cssString = `
 
   .results-bar {
     transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  /* ── Dark theme (default) ── */
+  :root[data-theme="dark"] .results-root,
+  .results-root {
+    --circle-track: rgba(255,255,255,0.06);
+    --bar-pre: #475569;
+    --bar-track: rgba(148,163,184,0.08);
+    --qcard-neither-bg: rgba(30,41,59,0.6);
+    --qcard-neither-border: rgba(148,163,184,0.08);
+  }
+
+  :root[data-theme="dark"] .results-title,
+  .results-title {
+    color: #f1f5f9;
+  }
+  :root[data-theme="dark"] .results-sub,
+  .results-sub {
+    color: #64748b;
+  }
+  :root[data-theme="dark"] .results-score-card,
+  .results-score-card {
+    background: rgba(15,23,42,0.85);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  }
+  :root[data-theme="dark"] .results-bar-track,
+  .results-bar-track {
+    background: rgba(148,163,184,0.08);
+  }
+  :root[data-theme="dark"] .result-qtext,
+  .result-qtext {
+    color: #e2e8f0;
+  }
+  :root[data-theme="dark"] .result-ans-label,
+  .result-ans-label {
+    color: #475569;
+  }
+  :root[data-theme="dark"] .result-opt-text,
+  .result-opt-text {
+    color: #94a3b8;
+  }
+  :root[data-theme="dark"] .result-correct-strip,
+  .result-correct-strip {
+    background: rgba(16,185,129,0.05);
+    border-color: rgba(16,185,129,0.12);
+  }
+  :root[data-theme="dark"] .result-correct-label,
+  .result-correct-label {
+    color: #64748b;
+  }
+  :root[data-theme="dark"] .results-back-btn,
+  .results-back-btn {
+    padding: 12px 32px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0891b2, #1d4ed8);
+    border: 1px solid rgba(6,182,212,0.3);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 0 20px rgba(6,182,212,0.25);
+  }
+
+  /* ── Light theme overrides ── */
+  :root[data-theme="light"] .results-root {
+    --circle-track: rgba(0,0,0,0.08);
+    --bar-pre: #94a3b8;
+    --bar-track: rgba(148,163,184,0.2);
+    --qcard-neither-bg: rgba(241,245,249,0.8);
+    --qcard-neither-border: rgba(148,163,184,0.2);
+  }
+
+  :root[data-theme="light"] .results-title {
+    color: var(--text-primary) !important;
+  }
+  :root[data-theme="light"] .results-sub {
+    color: var(--text-muted) !important;
+  }
+  :root[data-theme="light"] .results-score-card {
+    background: rgba(255,255,255,0.9) !important;
+    border-color: rgba(148,163,184,0.2) !important;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08) !important;
+  }
+  :root[data-theme="light"] .results-bar-track {
+    background: rgba(148,163,184,0.2) !important;
+  }
+  :root[data-theme="light"] .result-card {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+  }
+  :root[data-theme="light"] .result-qtext {
+    color: var(--text-primary) !important;
+  }
+  :root[data-theme="light"] .result-ans-label {
+    color: var(--text-muted) !important;
+  }
+  :root[data-theme="light"] .result-opt-text {
+    color: var(--text-muted) !important;
+  }
+  :root[data-theme="light"] .result-correct-strip {
+    background: rgba(16,185,129,0.07) !important;
+    border-color: rgba(16,185,129,0.2) !important;
+  }
+  :root[data-theme="light"] .result-correct-label {
+    color: var(--text-muted) !important;
+  }
+  :root[data-theme="light"] .results-back-btn {
+    padding: 12px 32px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0891b2, #1d4ed8);
+    border: 1px solid rgba(6,182,212,0.4);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 0 20px rgba(6,182,212,0.2);
+  }
+  :root[data-theme="light"] .results-header {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.04)) !important;
+    border-color: rgba(16,185,129,0.25) !important;
   }
 `;

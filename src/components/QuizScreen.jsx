@@ -375,7 +375,8 @@ export default function QuizScreen({ quizType, onComplete }) {
                                 {/* Option text */}
                                 <span style={{
                                     ...styles.optText,
-                                    color: isSelected ? '#e2e8f0' : '#94a3b8',
+                                    color: isSelected ? '#e2e8f0' : 'var(--text-primary)',
+
                                 }}>
                                     {option?.[lang] || option?.ar || option?.en || option}
                                 </span>
@@ -436,8 +437,7 @@ export default function QuizScreen({ quizType, onComplete }) {
 
         </div>
     );
-}
-const styles = {
+} const styles = {
     root: {
         width: '100%',
         maxWidth: 720,
@@ -460,38 +460,37 @@ const styles = {
     },
     loadText: { color: '#67e8f9', fontSize: 15 },
 
-    // Top bar
     topBar: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 4px',
     },
     statsPill: {
         display: 'flex', alignItems: 'center',
-        background: 'rgba(15,23,42,0.8)',
-        border: '1px solid rgba(148,163,184,0.08)',
+        background: 'var(--pill-bg)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 12, padding: '8px 14px', gap: 12,
         backdropFilter: 'blur(12px)',
     },
     statItem: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 },
-    statLabel: { fontSize: 10, color: '#475569', fontWeight: 600, letterSpacing: '0.05em' },
-    statDivider: { width: 1, height: 24, background: 'rgba(148,163,184,0.1)' },
+    statLabel: { fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.05em' },
+    statDivider: { width: 1, height: 24, background: 'var(--border-subtle)' },
     circleWrap: { position: 'relative', width: 64, height: 64 },
     circleText: {
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
         justifyContent: 'center',
     },
-    circleNum: { fontSize: 16, fontWeight: 900, color: '#e2e8f0' },
-    circleTotal: { fontSize: 11, color: '#475569', marginTop: 2 },
+    circleNum: { fontSize: 16, fontWeight: 900, color: 'var(--text-primary)' },
+    circleTotal: { fontSize: 11, color: 'var(--text-muted)', marginTop: 2 },
     reviewBtn: {
-        background: 'rgba(15,23,42,0.8)',
-        border: '1px solid rgba(148,163,184,0.12)',
-        color: '#94a3b8', borderRadius: 10,
+        background: 'var(--pill-bg)',
+        border: '1px solid var(--border-subtle)',
+        color: 'var(--text-secondary)', borderRadius: 10,
         padding: '8px 14px', fontSize: 13, fontWeight: 600,
         cursor: 'pointer', backdropFilter: 'blur(12px)',
         fontFamily: 'inherit',
     },
     progressTrack: {
-        height: 4, background: 'rgba(148,163,184,0.08)',
+        height: 4, background: 'var(--border-subtle)',
         borderRadius: 999, position: 'relative', overflow: 'visible',
         margin: '4px 0',
     },
@@ -513,12 +512,12 @@ const styles = {
         transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
     },
     card: {
-        background: 'rgba(15,23,42,0.85)',
-        border: '1px solid rgba(148,163,184,0.08)',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 20,
         padding: '28px 24px',
         backdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03)',
         position: 'relative',
         overflow: 'hidden',
     },
@@ -531,9 +530,9 @@ const styles = {
     },
     qBadgeLabel: { fontSize: 11, color: '#67e8f9', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' },
     qBadgeNum: { fontSize: 13, color: '#06b6d4', fontWeight: 900 },
-    qBadgeOf: { fontSize: 11, color: '#475569' },
+    qBadgeOf: { fontSize: 11, color: 'var(--text-muted)' },
     qText: {
-        fontSize: 18, fontWeight: 700, color: '#f1f5f9',
+        fontSize: 18, fontWeight: 700, color: 'var(--text-primary)',
         lineHeight: 1.65, marginBottom: 24, marginTop: 0,
     },
     optionsWrap: { display: 'flex', flexDirection: 'column', gap: 10 },
@@ -547,8 +546,8 @@ const styles = {
         overflow: 'hidden',
     },
     optionDefault: {
-        background: 'rgba(30,41,59,0.7)',
-        border: '1px solid rgba(148,163,184,0.08)',
+        background: 'var(--option-bg)',
+        border: '1px solid rgba(148,163,184,0.3)',
     },
     optionSelected: {
         background: 'rgba(6,182,212,0.08)',
@@ -575,9 +574,9 @@ const styles = {
     },
     navBtn: {
         display: 'flex', alignItems: 'center', gap: 6,
-        background: 'rgba(30,41,59,0.8)',
-        border: '1px solid rgba(148,163,184,0.1)',
-        color: '#94a3b8', borderRadius: 12,
+        background: 'var(--nav-btn-bg)',
+        border: '1px solid var(--border-subtle)',
+        color: 'var(--text-secondary)', borderRadius: 12,
         padding: '12px 20px', fontSize: 14, fontWeight: 600,
         cursor: 'pointer', fontFamily: 'inherit',
         transition: 'all 0.2s ease',
@@ -613,16 +612,16 @@ const styles = {
     },
     backBtn: {
         display: 'flex', alignItems: 'center',
-        background: 'rgba(30,41,59,0.8)',
-        border: '1px solid rgba(148,163,184,0.1)',
-        color: '#94a3b8', borderRadius: 10,
+        background: 'var(--nav-btn-bg)',
+        border: '1px solid var(--border-subtle)',
+        color: 'var(--text-secondary)', borderRadius: 10,
         padding: '8px 12px', cursor: 'pointer',
     },
     reviewHeader: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         marginBottom: 16,
     },
-    reviewTitle: { fontSize: 18, fontWeight: 800, color: '#f1f5f9', margin: 0 },
+    reviewTitle: { fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', margin: 0 },
     reviewStats: { display: 'flex', alignItems: 'center', fontSize: 14, fontWeight: 700 },
     reviewGrid: {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(52px, 1fr))',
@@ -634,7 +633,7 @@ const styles = {
         gap: 2, border: 'none', fontFamily: 'inherit',
         transition: 'all 0.2s ease',
     },
-    reviewCellNum: { fontSize: 13, fontWeight: 800, color: '#e2e8f0' },
+    reviewCellNum: { fontSize: 13, fontWeight: 800, color: 'var(--text-primary)' },
     reviewCellAns: { fontSize: 10, fontWeight: 700, color: '#6ee7b7' },
     spinnerSmall: {
         width: 16, height: 16, borderRadius: '50%',
@@ -644,6 +643,7 @@ const styles = {
         flexShrink: 0,
     },
 };
+
 const cssString = `
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -680,12 +680,12 @@ const cssString = `
   .quiz-option:hover {
     transform: translateX(6px) !important;
     border-color: rgba(6,182,212,0.25) !important;
-    background: rgba(30,41,59,0.9) !important;
+    background: var(--option-bg) !important;
   }
   .quiz-nav-btn:hover:not(:disabled) {
-    background: rgba(51,65,85,0.9) !important;
-    color: #e2e8f0 !important;
-    border-color: rgba(148,163,184,0.2) !important;
+    background: var(--nav-btn-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-subtle) !important;
   }
   .quiz-nav-btn-next:hover:not(:disabled) {
     transform: translateY(-2px);
@@ -696,12 +696,17 @@ const cssString = `
     box-shadow: 0 0 40px rgba(16,185,129,0.4) !important;
   }
   .quiz-review-btn:hover {
-    background: rgba(30,41,59,0.9) !important;
-    color: #e2e8f0 !important;
-    border-color: rgba(148,163,184,0.2) !important;
+    background: var(--nav-btn-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-subtle) !important;
   }
 
-  @media (max-width: 480px) {
+ @media (max-width: 480px) {
     .quiz-card { padding: 20px 16px !important; }
+  }
+
+  :root[data-theme="light"] .quiz-option span,
+  :root[data-theme="light"] .quiz-option {
+    color: #1e293b !important;
   }
 `;
