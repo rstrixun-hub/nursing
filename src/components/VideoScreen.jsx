@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db, auth } from '../firebase/config';
 import { useQuizStore } from '../store/useQuizStore';
+import NoteBook from './NoteBook';
+
 
 const formatVideoUrl = (url) => {
     if (!url || typeof url !== 'string') return '';
@@ -105,6 +107,7 @@ const AlertIcon = () => (
 export default function VideoScreen({ onComplete }) {
     const { lang, setStep } = useQuizStore();
     const isAr = lang === 'ar';
+    const uid = auth.currentUser?.uid || null;
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(0);
@@ -918,6 +921,12 @@ export default function VideoScreen({ onComplete }) {
 
                 </div>
             </div>
+
+            <NoteBook
+                uid={uid}
+                videoId={currentVideo?.id || String(current)}
+                isAr={isAr}
+            />
         </>
     );
 }
