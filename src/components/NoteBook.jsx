@@ -3,6 +3,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY;
+console.log('GROQ KEY:', GROQ_KEY);
 const translateText = async (text, fromLang, toLang) => {
     const res = await fetch(
         `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${fromLang}|${toLang}`
