@@ -17,7 +17,6 @@ const Icons = {
       <path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none" />
     </svg>
   ),
-  // أيقونة التحليلات الجديدة
   Chart: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
       <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
@@ -135,7 +134,6 @@ const textareaCls = (dir = 'rtl') =>
    focus:outline-none focus:border-cyan-500/70 focus:ring-2 focus:ring-cyan-500/20 focus:bg-slate-900
    transition-all duration-200 resize-none font-medium leading-relaxed ${dir === 'ltr' ? 'text-left' : 'text-right'}`;
 
-// ── CONFIRM DIALOG ──
 const ConfirmDialog = ({ message, onConfirm, onCancel }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}>
     <div className="glass-card rounded-2xl p-6 max-w-sm w-full border border-red-500/20">
@@ -169,7 +167,6 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [confirmDialog, setConfirmDialog] = useState(null);
 
-  // ── QUESTIONS STATE ──
   const [questions, setQuestions] = useState([]);
   const [qIndex, setQIndex] = useState(0);
   const [qFormData, setQFormData] = useState({
@@ -199,7 +196,6 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (questions[qIndex]) {
       const q = questions[qIndex];
-      // Support both old {A:{ar,en}} and new [{ar,en}] format
       let opts = [];
       if (Array.isArray(q.options)) {
         opts = q.options;
@@ -291,12 +287,10 @@ export default function AdminDashboard() {
       onCancel: () => setConfirmDialog(null),
     });
   };
-
-  // ── VIDEOS STATE ──
-  const [videos, setVideos] = useState([]);           // [{id, step, title, ...}]
-  const [videoStep, setVideoStep] = useState(null);   // currently selected step number
+  const [videos, setVideos] = useState([]);          
+  const [videoStep, setVideoStep] = useState(null);   
   const [videoFormData, setVideoFormData] = useState({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '' });
-  const [stepCounts, setStepCounts] = useState({});   // { step: count }
+  const [stepCounts, setStepCounts] = useState({});  
 
   const loadVideos = async () => {
     try {
@@ -315,13 +309,11 @@ export default function AdminDashboard() {
     const counts = {};
     try {
       for (const step of steps) {
-        // Count users who completed this step (adjust collection/field as needed)
         const q = query(collection(db, 'userProgress'), where('completedStep', '>=', step));
         const snap = await getCountFromServer(q);
         counts[step] = snap.data().count;
       }
     } catch {
-      // If collection doesn't exist yet, silently ignore
     }
     setStepCounts(counts);
   };
