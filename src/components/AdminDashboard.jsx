@@ -287,10 +287,11 @@ export default function AdminDashboard() {
       onCancel: () => setConfirmDialog(null),
     });
   };
-  const [videos, setVideos] = useState([]);          
-  const [videoStep, setVideoStep] = useState(null);   
-  const [videoFormData, setVideoFormData] = useState({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '' });
-  const [stepCounts, setStepCounts] = useState({});  
+  const [videos, setVideos] = useState([]);
+  const [videoStep, setVideoStep] = useState(null);
+  const [videoFormData, setVideoFormData] = useState({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '', pdfUrl: '', pptxUrl: '', notes: '' });
+  const [uploadProgress, setUploadProgress] = useState({ pdf: 0, pptx: 0 });
+  const [stepCounts, setStepCounts] = useState({});
 
   const loadVideos = async () => {
     try {
@@ -340,14 +341,40 @@ export default function AdminDashboard() {
         descAr: found.description?.ar || '',
         descEn: found.description?.en || '',
         url: found.url || '',
+        pdfUrl: found.pdfUrl || '',
+        pptxUrl: found.pptxUrl || '',
+        notes: found.notes || '',
       });
     } else {
-      setVideoFormData({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '' });
+      setVideoFormData({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '', pdfUrl: '', pptxUrl: '', notes: '' });
     }
   }, [videoStep, videos]);
 
   const handleVideoChange = (e) => setVideoFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-
+  const handleFileUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const { supabase } = await import('../supabase/config');
+    const ext = file.name.split('.').pop();
+    const path = `step_${videoStep}/${type}_${Date.now()}.${ext}`;
+    setUploadProgress(prev => ({ ...prev, [type]: 1 }));
+    const { error } = await supabase.storage
+      .from('materials')
+      .upload(path, file, { upsert: true });
+    if (error) {
+      console.error(error);
+      setMessage({ text: 'فشل رفع الملف', type: 'error' });
+      setUploadProgress(prev => ({ ...prev, [type]: 0 }));
+      return;
+    }
+    const { data: urlData } = supabase.storage
+      .from('materials')
+      .getPublicUrl(path);
+    const key = type === 'pdf' ? 'pdfUrl' : 'pptxUrl';
+    setVideoFormData(prev => ({ ...prev, [key]: urlData.publicUrl }));
+    setUploadProgress(prev => ({ ...prev, [type]: 0 }));
+    setMessage({ text: 'تم رفع الملف بنجاح ✓', type: 'success' });
+  };
   const addNewVideo = () => {
     const nextStep = videos.length > 0 ? Math.max(...videos.map(v => v.step)) + 1 : 1;
     setVideoStep(nextStep);
@@ -365,6 +392,9 @@ export default function AdminDashboard() {
         title: { ar: videoFormData.titleAr, en: videoFormData.titleEn },
         description: { ar: videoFormData.descAr, en: videoFormData.descEn },
         url: videoFormData.url,
+        pdfUrl: videoFormData.pdfUrl || '',
+        pptxUrl: videoFormData.pptxUrl || '',
+        notes: videoFormData.notes || '',
         updatedAt: new Date().toISOString(),
       });
       setMessage({ text: `تم حفظ الصفحة التعليمية رقم ${videoStep} بنجاح`, type: 'success' });
@@ -925,6 +955,57 @@ export default function AdminDashboard() {
                             focus:outline-none focus:border-cyan-500/70 focus:ring-2 focus:ring-cyan-500/20 transition-all"
                           style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: '13px' }}
                         />
+                      </div>
+                    </div>
+
+                    {/* Materials */}
+                    <div>
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">المواد التعليمية (اختياري)</p>
+                      <div className="mb-4">
+                        <Field label="نص الشرح" icon={<Icons.Edit />}>
+                          <textarea rows="4" name="notes" value={videoFormData.notes || ''} onChange={handleVideoChange}
+                            placeholder="اكتب ملاحظات أو شرح نصي هنا..." className={textareaCls('rtl')} />
+                        </Field>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 admin-grid-2">
+                        {/* PDF */}
+                        <Field label="رفع PDF" icon={<Icons.Film />}>
+                          <input type="file" accept=".pdf" onChange={(e) => handleFileUpload(e, 'pdf')} className="hidden" id="pdf-upload" />
+                          <label htmlFor="pdf-upload" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/60 cursor-pointer hover:border-cyan-500/50 transition-all">
+                            {uploadProgress.pdf > 0 ? (
+                              <div className="flex items-center gap-2 w-full">
+                                <Icons.Loader />
+                                <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                  <div className="h-full bg-cyan-500 rounded-full transition-all" style={{ width: `${uploadProgress.pdf}%` }} />
+                                </div>
+                                <span className="text-cyan-400 text-xs">{uploadProgress.pdf}%</span>
+                              </div>
+                            ) : videoFormData.pdfUrl ? (
+                              <span className="text-emerald-400 text-xs font-semibold flex items-center gap-2"><Icons.Check />تم الرفع — انقر للتغيير</span>
+                            ) : (
+                              <span className="text-slate-500 text-xs">اختر ملف PDF</span>
+                            )}
+                          </label>
+                        </Field>
+                        {/* PPTX */}
+                        <Field label="رفع بوربوينت" icon={<Icons.Videos />}>
+                          <input type="file" accept=".ppt,.pptx" onChange={(e) => handleFileUpload(e, 'pptx')} className="hidden" id="pptx-upload" />
+                          <label htmlFor="pptx-upload" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/60 cursor-pointer hover:border-violet-500/50 transition-all">
+                            {uploadProgress.pptx > 0 ? (
+                              <div className="flex items-center gap-2 w-full">
+                                <Icons.Loader />
+                                <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                  <div className="h-full bg-violet-500 rounded-full transition-all" style={{ width: `${uploadProgress.pptx}%` }} />
+                                </div>
+                                <span className="text-violet-400 text-xs">{uploadProgress.pptx}%</span>
+                              </div>
+                            ) : videoFormData.pptxUrl ? (
+                              <span className="text-emerald-400 text-xs font-semibold flex items-center gap-2"><Icons.Check />تم الرفع — انقر للتغيير</span>
+                            ) : (
+                              <span className="text-slate-500 text-xs">اختر ملف PPTX</span>
+                            )}
+                          </label>
+                        </Field>
                       </div>
                     </div>
 
