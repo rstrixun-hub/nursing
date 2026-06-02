@@ -725,7 +725,7 @@ export default function App() {
               <StatsCircles lang={lang} theme={theme} />
 
               <button
-                onClick={async () => { await startSession(); }}
+                onClick={startSession}
                 className="welcome-btn start-btn px-10 sm:px-14 py-4 rounded-2xl text-lg sm:text-xl font-black text-white"
               >
                 {t.start}

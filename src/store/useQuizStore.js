@@ -5,7 +5,6 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 
 const generateStudentId = () => 'student_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
-
 export const useQuizStore = create(
   persist(
     (set, get) => ({
@@ -19,13 +18,14 @@ export const useQuizStore = create(
 
       startSession: async () => {
         try {
-          await signInAnonymously(auth);
-
           let currentStudentId = get().studentId;
           if (!currentStudentId) {
             currentStudentId = generateStudentId();
             set({ studentId: currentStudentId });
           }
+          set({ currentStep: 1 }); // ← انتقل فوراً قبل أي network
+
+          await signInAnonymously(auth);
 
           const userRef = doc(db, 'sessions', currentStudentId);
           const versionSnap = await getDoc(doc(db, 'config', 'version'));
@@ -39,7 +39,6 @@ export const useQuizStore = create(
               contentVersion: latestVersion,
               createdAt: new Date().toISOString()
             });
-            set({ currentStep: 1 });
           } else {
             const savedData = docSnap.data();
             const savedVersion = savedData.contentVersion || '';
@@ -64,7 +63,6 @@ export const useQuizStore = create(
           }
         } catch (error) {
           console.error("Session Error:", error);
-          alert("حدث خطأ في بدء الجلسة، تأكد من اتصال الإنترنت.");
         }
       },
 
