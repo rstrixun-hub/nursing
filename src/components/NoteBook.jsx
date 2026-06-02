@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
-const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY;
-console.log('GROQ KEY:', GROQ_KEY);
 const translateText = async (text, fromLang, toLang) => {
     const res = await fetch(
         `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${fromLang}|${toLang}`
@@ -31,7 +29,7 @@ export default function NoteBook({ uid, videoId, isAr }) {
     const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0, loading: false });
     const [spellErrors, setSpellErrors] = useState([]);
     const [checkingSpell, setCheckingSpell] = useState(false);
-    const [activeTab, setActiveTab] = useState('write'); 
+    const [activeTab, setActiveTab] = useState('write');
     const [aiResponse, setAiResponse] = useState('');
     const [aiLoading, setAiLoading] = useState(false);
     const [aiType, setAiType] = useState('');
@@ -119,11 +117,10 @@ export default function NoteBook({ uid, videoId, isAr }) {
         };
 
         try {
-            const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            const res = await fetch('/api/groq', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_KEY}`,
                 },
                 body: JSON.stringify({
                     model: 'llama-3.3-70b-versatile',
