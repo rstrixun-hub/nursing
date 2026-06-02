@@ -104,12 +104,58 @@ export default function QuizScreen({ quizType, onComplete }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [direction, setDirection] = useState('next'); // 'next' | 'prev'
+    const [direction, setDirection] = useState('next');
     const [animating, setAnimating] = useState(false);
     const [showReview, setShowReview] = useState(false);
     const [ripple, setRipple] = useState(null);
     const [lockedAnswers, setLockedAnswers] = useState({});
+    const TIMER_DURATION = 120;
+    const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
+    const [timerPaused, setTimerPaused] = useState(false);
+    const [questionAttempts, setQuestionAttempts] = useState({});
+    const timerRef = useRef(null);
+    const timerPausedRef = useRef(false);
     const cardRef = useRef(null);
+
+    useEffect(() => {
+        if (!currentQ) return;
+        setTimeLeft(TIMER_DURATION);
+        setTimerPaused(false);
+        timerPausedRef.current = false;
+        clearInterval(timerRef.current);
+
+        timerRef.current = setInterval(() => {
+            if (timerPausedRef.current) return;
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timerRef.current);
+                    setQuestionAttempts(a => {
+                        const count = (a[currentQ.id] || 0) + 1;
+                        return { ...a, [currentQ.id]: count };
+                    });
+                    if (currentIndex < questions.length - 1) {
+                        setTimeout(() => navigate('next'), 300);
+                    }
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timerRef.current);
+    }, [currentIndex, questions.length]);
+
+    const handleBarPressStart = () => {
+        timerPausedRef.current = true;
+        setTimerPaused(true);
+    };
+
+    const handleBarPressEnd = () => {
+        timerPausedRef.current = false;
+        setTimerPaused(false);
+    };
+
+    const isQuestionBlocked = (qId) => (questionAttempts[qId] || 0) >= 2;
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
@@ -133,6 +179,10 @@ export default function QuizScreen({ quizType, onComplete }) {
     const isAnswered = currentQ && selectedAnswers[currentQ.id] !== undefined;
     const navigate = (dir) => {
         if (animating) return;
+        if (dir === 'prev' && currentIndex > 0) {
+            const prevQ = questions[currentIndex - 1];
+            if (prevQ && isQuestionBlocked(prevQ.id)) return;
+        }
         setDirection(dir);
         setAnimating(true);
         setTimeout(() => {
@@ -175,9 +225,10 @@ export default function QuizScreen({ quizType, onComplete }) {
         } catch (err) {
             console.error('Error saving answer:', err);
         }
-
         if (currentIndex < questions.length - 1) {
-            setTimeout(() => navigate('next'), 420);
+            setTimeout(() => {
+                if (currentIndex < questions.length - 1) navigate('next');
+            }, 420);
         }
     };
     const handleSubmit = async () => {
@@ -288,6 +339,58 @@ export default function QuizScreen({ quizType, onComplete }) {
                     {isRTL ? 'مراجعة' : 'Review'}
                 </button>
             </div>
+
+            {/* ── TIMER BAR ── */}
+            {(() => {
+                const pct = (timeLeft / TIMER_DURATION) * 100;
+                const isBlocked = currentQ && isQuestionBlocked(currentQ.id);
+                const color = pct > 50 ? '#06b6d4' : pct > 20 ? '#f59e0b' : '#ef4444';
+                return (
+                    <div style={{ marginBottom: 4 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: timerPaused ? '#f59e0b' : color, fontVariantNumeric: 'tabular-nums' }}>
+                                {timerPaused ? (isRTL ? '⏸ متوقف' : '⏸ Paused') : `${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`}
+                            </span>
+                            {isBlocked && (
+                                <span style={{ fontSize: 11, color: '#ef4444', fontWeight: 700 }}>
+                                    {isRTL ? '🔒 لا يمكن الرجوع' : '🔒 Locked'}
+                                </span>
+                            )}
+                            {!isBlocked && currentQ && (questionAttempts[currentQ.id] || 0) === 1 && (
+                                <span style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700 }}>
+                                    {isRTL ? '⚠️ محاولة أخيرة' : '⚠️ Last Attempt'}
+                                </span>
+                            )}
+                        </div>
+                        <div
+                            style={{
+                                height: 8, borderRadius: 999,
+                                background: 'rgba(148,163,184,0.1)',
+                                cursor: isBlocked ? 'default' : 'pointer',
+                                userSelect: 'none', WebkitUserSelect: 'none',
+                                position: 'relative', overflow: 'hidden',
+                            }}
+                            onMouseDown={isBlocked ? undefined : handleBarPressStart}
+                            onMouseUp={isBlocked ? undefined : handleBarPressEnd}
+                            onMouseLeave={isBlocked ? undefined : handleBarPressEnd}
+                            onTouchStart={isBlocked ? undefined : handleBarPressStart}
+                            onTouchEnd={isBlocked ? undefined : handleBarPressEnd}
+                        >
+                            <div style={{
+                                height: '100%', borderRadius: 999,
+                                width: isBlocked ? '100%' : `${pct}%`,
+                                background: isBlocked
+                                    ? 'linear-gradient(90deg, #ef4444, #b91c1c)'
+                                    : timerPaused
+                                        ? 'linear-gradient(90deg, #f59e0b, #d97706)'
+                                        : `linear-gradient(90deg, ${color}, ${pct > 50 ? '#3b82f6' : pct > 20 ? '#ef4444' : '#b91c1c'})`,
+                                transition: timerPaused ? 'none' : 'width 1s linear, background 0.5s ease',
+                                boxShadow: `0 0 10px ${isBlocked ? 'rgba(239,68,68,0.5)' : timerPaused ? 'rgba(245,158,11,0.5)' : `${color}80`}`,
+                            }} />
+                        </div>
+                    </div>
+                );
+            })()}
 
             {/* ── PROGRESS BAR ── */}
             <div style={styles.progressTrack}>
@@ -400,7 +503,7 @@ export default function QuizScreen({ quizType, onComplete }) {
             <div style={styles.navRow}>
                 <button
                     onClick={() => navigate('prev')}
-                    disabled={currentIndex === 0 || animating}
+                    disabled={currentIndex === 0 || animating || (currentIndex > 0 && isQuestionBlocked(questions[currentIndex - 1]?.id))}
                     style={{
                         ...styles.navBtn,
                         opacity: currentIndex === 0 ? 0.3 : 1,
