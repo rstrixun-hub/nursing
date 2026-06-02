@@ -31,5 +31,5 @@ export default defineConfig({
       }
     })
   ],
-  base: '/nursing/', 
+  base: '/',
 })
