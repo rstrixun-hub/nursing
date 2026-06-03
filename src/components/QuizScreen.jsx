@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useQuizStore } from '../store/useQuizStore';
 const T = {
@@ -117,6 +117,9 @@ export default function QuizScreen({ quizType, onComplete }) {
     const timerPausedRef = useRef(false);
     const cardRef = useRef(null);
 
+    const currentQ = questions[currentIndex];
+
+
     useEffect(() => {
         if (!currentQ) return;
         setTimeLeft(TIMER_DURATION);
@@ -143,7 +146,7 @@ export default function QuizScreen({ quizType, onComplete }) {
         }, 1000);
 
         return () => clearInterval(timerRef.current);
-    }, [currentIndex, questions.length]);
+    }, [currentIndex, questions.length, currentQ]);
 
     const handleBarPressStart = () => {
         timerPausedRef.current = true;
@@ -159,7 +162,7 @@ export default function QuizScreen({ quizType, onComplete }) {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const snapshot = await getDocs(collection(db, 'questions'));
+                const snapshot = await getDocs(query(collection(db, 'questions'), orderBy('createdAt')));
                 const docs = [];
                 snapshot.forEach(d => docs.push({ id: d.id, ...d.data() }));
                 setQuestions(docs);
@@ -171,7 +174,6 @@ export default function QuizScreen({ quizType, onComplete }) {
         fetchQuestions();
     }, []);
 
-    const currentQ = questions[currentIndex];
     const answeredCount = Object.keys(selectedAnswers).length;
     const remainingCount = questions.length - answeredCount;
     const progressPct = questions.length === 0 ? 0 : Math.round(((currentIndex) / questions.length) * 100);
@@ -202,13 +204,9 @@ export default function QuizScreen({ quizType, onComplete }) {
             setShowReview(false);
         }, 220);
     };
-
     const handleSelect = async (questionId, optionKey, e) => {
         if (lockedAnswers[questionId]) return;
 
-        if (selectedAnswers[questionId] !== undefined) {
-            setLockedAnswers(prev => ({ ...prev, [questionId]: true }));
-        }
         if (e) {
             const rect = e.currentTarget.getBoundingClientRect();
             setRipple({ x: e.clientX - rect.left, y: e.clientY - rect.top, key: Date.now() });
@@ -217,9 +215,14 @@ export default function QuizScreen({ quizType, onComplete }) {
 
         setSelectedAnswers(prev => ({ ...prev, [questionId]: optionKey }));
 
+        if (selectedAnswers[questionId] !== undefined) {
+            setLockedAnswers(prev => ({ ...prev, [questionId]: true }));
+        }
+
+        const updatedAnswers = { ...selectedAnswers, [questionId]: optionKey };
         try {
             await setDoc(doc(db, 'sessions', studentId), {
-                [`answers_${quizType}`]: { ...selectedAnswers, [questionId]: optionKey },
+                [`answers_${quizType}`]: updatedAnswers,
                 lastUpdate: new Date().toISOString()
             }, { merge: true });
         } catch (err) {
@@ -291,7 +294,11 @@ export default function QuizScreen({ quizType, onComplete }) {
                             }}
                         >
                             <span style={styles.reviewCellNum}>{idx + 1}</span>
-                            {ans && <span style={styles.reviewCellAns}>{ans}</span>}
+                            {ans !== undefined && (
+                                <span style={styles.reviewCellAns}>
+                                    {OPTION_CHARS[Number(ans)] || ans}
+                                </span>
+                            )}
                         </button>
                     );
                 })}
@@ -305,7 +312,11 @@ export default function QuizScreen({ quizType, onComplete }) {
             )}
         </div>
     );
-    const options = currentQ ? Object.entries(currentQ.options || {}) : [];
+    const options = currentQ
+        ? Array.isArray(currentQ.options)
+            ? currentQ.options.map((o, i) => [String(i), o])
+            : Object.entries(currentQ.options || {})
+        : [];
     return (
         <div dir={isRTL ? 'rtl' : 'ltr'} style={styles.root}>
             <style>{cssString}</style>
@@ -417,7 +428,8 @@ export default function QuizScreen({ quizType, onComplete }) {
                 ref={cardRef}
                 key={currentIndex}
                 style={styles.card}
-                className={`quiz-card ${animating ? (direction === 'next' ? 'slide-out-left' : 'slide-out-right') : 'slide-in'}`}
+                className={`quiz-card ${animating ? (direction === 'next' ? 'slide-out-left' : 'slide-out-right') : (direction === 'next' ? 'slide-in' : 'slide-in-prev')}`}
+
             >
                 {/* Question number badge */}
                 <div style={styles.qBadge}>

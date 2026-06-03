@@ -169,6 +169,7 @@ export default function AdminDashboard() {
 
   const [questions, setQuestions] = useState([]);
   const [qIndex, setQIndex] = useState(0);
+  const [qCategory, setQCategory] = useState('A');
   const [qFormData, setQFormData] = useState({
     qAr: '', qEn: '',
     options: [
@@ -178,20 +179,22 @@ export default function AdminDashboard() {
     correctAnswer: 0,
   });
 
-  const loadQuestions = async () => {
+  const loadQuestions = async (keepIndex = false) => {
     try {
-      const q = query(collection(db, 'questions'), orderBy('createdAt', 'asc'));
+      const q = query(collection(db, 'questions'), where('category', '==', qCategory));
       const snap = await getDocs(q);
       const docs = [];
       snap.forEach((d) => docs.push({ id: d.id, ...d.data() }));
       setQuestions(docs);
-      setQIndex(docs.length);
+      if (!keepIndex) setQIndex(0);
+      return docs;
     } catch (err) {
       console.error('Error loading questions:', err);
+      return [];
     }
   };
 
-  useEffect(() => { loadQuestions(); }, []);
+  useEffect(() => { loadQuestions(); }, [qCategory]);
 
   useEffect(() => {
     if (questions[qIndex]) {
@@ -235,7 +238,9 @@ export default function AdminDashboard() {
   const removeOption = (idx) => {
     if (qFormData.options.length <= 2) return;
     const opts = qFormData.options.filter((_, i) => i !== idx);
-    const correct = qFormData.correctAnswer >= opts.length ? opts.length - 1 : qFormData.correctAnswer;
+    let correct = qFormData.correctAnswer;
+    if (idx === correct) correct = 0;
+    else if (idx < correct) correct -= 1;
     setQFormData(prev => ({ ...prev, options: opts, correctAnswer: correct }));
   };
 
@@ -247,17 +252,21 @@ export default function AdminDashboard() {
       question: { ar: qFormData.qAr, en: qFormData.qEn },
       options: qFormData.options,
       correctAnswer: qFormData.correctAnswer,
+      category: qCategory,
       createdAt: questions[qIndex]?.createdAt ?? new Date().toISOString(),
     };
     try {
-      if (questions[qIndex]) {
+      const isEditing = !!questions[qIndex];
+      if (isEditing) {
         await setDoc(doc(db, 'questions', questions[qIndex].id), questionData);
         setMessage({ text: 'تم تحديث السؤال بنجاح', type: 'success' });
+        await loadQuestions(true);
       } else {
         await addDoc(collection(db, 'questions'), questionData);
         setMessage({ text: 'تم إضافة السؤال الجديد بنجاح', type: 'success' });
+        const newDocs = await loadQuestions(false);
+        setQIndex(newDocs.length - 1);
       }
-      await loadQuestions();
       await setDoc(doc(db, 'config', 'version'), {
         questionsVersion: new Date().toISOString(),
       }, { merge: true });
@@ -277,8 +286,9 @@ export default function AdminDashboard() {
         try {
           await deleteDoc(doc(db, 'questions', questions[qIndex].id));
           setMessage({ text: 'تم حذف السؤال بنجاح', type: 'success' });
-          await loadQuestions();
-          setQIndex(prev => Math.max(0, prev - 1));
+          const prevIndex = qIndex;
+          await loadQuestions(false);
+          setQIndex(Math.max(0, prevIndex - 1));
         } catch {
           setMessage({ text: 'حدث خطأ أثناء الحذف', type: 'error' });
         }
@@ -290,7 +300,8 @@ export default function AdminDashboard() {
   const [videos, setVideos] = useState([]);
   const [videoStep, setVideoStep] = useState(null);
   const [videoFormData, setVideoFormData] = useState({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '', pdfUrl: '', pptxUrl: '', notes: '' });
-  const [uploadProgress, setUploadProgress] = useState({ pdf: 0, pptx: 0 });
+  const [uploading, setUploading] = useState({ pdf: false, pptx: false });
+
   const [stepCounts, setStepCounts] = useState({});
 
   const loadVideos = async () => {
@@ -300,7 +311,7 @@ export default function AdminDashboard() {
       snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
       docs.sort((a, b) => (a.step || 0) - (b.step || 0));
       setVideos(docs);
-      if (docs.length > 0 && videoStep === null) setVideoStep(docs[0].step);
+      if (docs.length > 0) setVideoStep(prev => prev ?? docs[0].step);
     } catch (err) {
       console.error('Error loading videos:', err);
     }
@@ -310,7 +321,8 @@ export default function AdminDashboard() {
     const counts = {};
     try {
       for (const step of steps) {
-        const q = query(collection(db, 'userProgress'), where('completedStep', '>=', step));
+        const q = query(collection(db, 'userProgress'), where('completedStep', '==', step));
+
         const snap = await getCountFromServer(q);
         counts[step] = snap.data().count;
       }
@@ -357,14 +369,15 @@ export default function AdminDashboard() {
     const { supabase } = await import('../supabase/config');
     const ext = file.name.split('.').pop();
     const path = `step_${videoStep}/${type}_${Date.now()}.${ext}`;
-    setUploadProgress(prev => ({ ...prev, [type]: 1 }));
+    setUploading(prev => ({ ...prev, [type]: true }));
+
     const { error } = await supabase.storage
       .from('materials')
       .upload(path, file, { upsert: true });
     if (error) {
       console.error(error);
+      setUploading(prev => ({ ...prev, [type]: false }));
       setMessage({ text: 'فشل رفع الملف', type: 'error' });
-      setUploadProgress(prev => ({ ...prev, [type]: 0 }));
       return;
     }
     const { data: urlData } = supabase.storage
@@ -372,11 +385,13 @@ export default function AdminDashboard() {
       .getPublicUrl(path);
     const key = type === 'pdf' ? 'pdfUrl' : 'pptxUrl';
     setVideoFormData(prev => ({ ...prev, [key]: urlData.publicUrl }));
-    setUploadProgress(prev => ({ ...prev, [type]: 0 }));
+    setUploading(prev => ({ ...prev, [type]: false }));
     setMessage({ text: 'تم رفع الملف بنجاح ✓', type: 'success' });
   };
   const addNewVideo = () => {
-    const nextStep = videos.length > 0 ? Math.max(...videos.map(v => v.step)) + 1 : 1;
+    const existingSteps = new Set(videos.map(v => v.step));
+    let nextStep = 1;
+    while (existingSteps.has(nextStep)) nextStep++;
     setVideoStep(nextStep);
     setVideoFormData({ titleAr: '', titleEn: '', descAr: '', descEn: '', url: '' });
   };
@@ -407,20 +422,20 @@ export default function AdminDashboard() {
     }
     setLoading(false);
   };
-
   const handleDeleteVideo = () => {
     const found = videos.find(v => v.step === videoStep);
     if (!found) return;
+    const foundId = found.id;
     setConfirmDialog({
       message: `هل تريد حذف الصفحة التعليمية رقم ${videoStep}؟`,
       onConfirm: async () => {
         setConfirmDialog(null);
         setLoading(true);
         try {
-          await deleteDoc(doc(db, 'videos', found.id));
+          await deleteDoc(doc(db, 'videos', foundId));
           setMessage({ text: 'تم حذف الصفحة التعليمية بنجاح', type: 'success' });
-          await loadVideos();
           setVideoStep(null);
+          await loadVideos();
         } catch {
           setMessage({ text: 'حدث خطأ أثناء الحذف', type: 'error' });
         }
@@ -613,6 +628,22 @@ export default function AdminDashboard() {
           {activeTab === 'questions' && (
             <div className="tab-content">
               {/* Navigation Bar */}
+              {/* Category Selector */}
+              <div className="glass-card rounded-2xl p-1.5 mb-4 flex gap-1.5">
+                {['A', 'B', 'C'].map(cat => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => { setQCategory(cat); setQIndex(0); setMessage({ text: '', type: '' }); }}
+                    className={`flex-1 py-2.5 rounded-xl font-black text-sm transition-all duration-300 ${qCategory === cat
+                      ? 'bg-gradient-to-l from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-500/25 shadow-lg'
+                      : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'
+                      }`}
+                  >
+                    فئة {cat}
+                  </button>
+                ))}
+              </div>
               <div className="glass-card rounded-2xl p-3 sm:p-4 mb-5 flex items-center gap-3">
                 <button
                   type="button"
@@ -972,14 +1003,8 @@ export default function AdminDashboard() {
                         <Field label="رفع PDF" icon={<Icons.Film />}>
                           <input type="file" accept=".pdf" onChange={(e) => handleFileUpload(e, 'pdf')} className="hidden" id="pdf-upload" />
                           <label htmlFor="pdf-upload" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/60 cursor-pointer hover:border-cyan-500/50 transition-all">
-                            {uploadProgress.pdf > 0 ? (
-                              <div className="flex items-center gap-2 w-full">
-                                <Icons.Loader />
-                                <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                  <div className="h-full bg-cyan-500 rounded-full transition-all" style={{ width: `${uploadProgress.pdf}%` }} />
-                                </div>
-                                <span className="text-cyan-400 text-xs">{uploadProgress.pdf}%</span>
-                              </div>
+                            {uploading.pdf ? (
+                              <span className="text-cyan-400 text-xs flex items-center gap-2"><Icons.Loader />جاري الرفع...</span>
                             ) : videoFormData.pdfUrl ? (
                               <span className="text-emerald-400 text-xs font-semibold flex items-center gap-2"><Icons.Check />تم الرفع — انقر للتغيير</span>
                             ) : (
@@ -991,14 +1016,8 @@ export default function AdminDashboard() {
                         <Field label="رفع بوربوينت" icon={<Icons.Videos />}>
                           <input type="file" accept=".ppt,.pptx" onChange={(e) => handleFileUpload(e, 'pptx')} className="hidden" id="pptx-upload" />
                           <label htmlFor="pptx-upload" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/60 cursor-pointer hover:border-violet-500/50 transition-all">
-                            {uploadProgress.pptx > 0 ? (
-                              <div className="flex items-center gap-2 w-full">
-                                <Icons.Loader />
-                                <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                  <div className="h-full bg-violet-500 rounded-full transition-all" style={{ width: `${uploadProgress.pptx}%` }} />
-                                </div>
-                                <span className="text-violet-400 text-xs">{uploadProgress.pptx}%</span>
-                              </div>
+                            {uploading.pptx ? (
+                              <span className="text-violet-400 text-xs flex items-center gap-2"><Icons.Loader />جاري الرفع...</span>
                             ) : videoFormData.pptxUrl ? (
                               <span className="text-emerald-400 text-xs font-semibold flex items-center gap-2"><Icons.Check />تم الرفع — انقر للتغيير</span>
                             ) : (

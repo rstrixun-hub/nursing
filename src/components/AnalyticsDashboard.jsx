@@ -3,20 +3,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 const Icon = {
-  Chart: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
-  Users: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>,
-  TrendingUp: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-  TrendingDown: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>,
-  Filter: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
-  Star: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  AlertTriangle: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
-  Download: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-  FileText: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
-  Table: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>,
-  Loader: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8 animate-spin"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.2" fill="currentColor" stroke="none"/><path d="M12 3a9 9 0 019 9"/></svg>,
-  Check: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="20 6 9 17 4 12"/></svg>,
-  X: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  Award: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>,
+  Chart: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>,
+  Users: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></svg>,
+  TrendingUp: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>,
+  TrendingDown: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6" /><polyline points="17 18 23 18 23 12" /></svg>,
+  Filter: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>,
+  Star: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>,
+  AlertTriangle: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>,
+  Download: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>,
+  FileText: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>,
+  Table: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>,
+  Loader: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8 animate-spin"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.2" fill="currentColor" stroke="none" /><path d="M12 3a9 9 0 019 9" /></svg>,
+  Check: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="20 6 9 17 4 12" /></svg>,
+  X: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>,
+  Award: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" /></svg>,
 };
 function CircularProgress({ percent, size = 80, strokeWidth = 8, color = '#22d3ee', label, sublabel }) {
   const radius = (size - strokeWidth) / 2;
@@ -85,78 +85,88 @@ function RankBadge({ rank }) {
       {rank}
     </div>
   );
-}
-async function exportToPDF(stats, avgPrePercent, avgPostPercent, avgImprovement) {
+} async function exportToPDF(stats, avgPrePercent, avgPostPercent, avgImprovement, categoryStats) {
   const { default: jsPDF } = await import('jspdf');
   const { default: autoTable } = await import('jspdf-autotable');
-
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const now = new Date().toLocaleDateString('ar-EG');
-  doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, 210, 40, 'F');
+  const funnelRate = stats.funnel.started > 0 ? Math.round((stats.funnel.postDone / stats.funnel.started) * 100) : 0;
+
+  // ── غلاف ──
+  doc.setFillColor(10, 15, 40);
+  doc.rect(0, 0, 210, 297, 'F');
+  doc.setFillColor(6, 182, 212, 0.15);
+  doc.rect(0, 0, 210, 60, 'F');
   doc.setTextColor(34, 211, 238);
-  doc.setFontSize(18);
+  doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('Analytics Report', 105, 16, { align: 'center' });
+  doc.text('Research Intelligence System', 105, 22, { align: 'center' });
+  doc.setFontSize(13);
+  doc.setTextColor(200, 220, 240);
+  doc.text('Official Analytics Report', 105, 33, { align: 'center' });
   doc.setFontSize(10);
   doc.setTextColor(148, 163, 184);
-  doc.text(`Generated: ${now}`, 105, 24, { align: 'center' });
-  doc.text(`Total Students: ${stats.totalStudents}`, 105, 31, { align: 'center' });
-  doc.setTextColor(15, 23, 42);
+  doc.text(`Date: ${now}`, 105, 43, { align: 'center' });
+  doc.text(`Total Students: ${stats.totalStudents}`, 105, 51, { align: 'center' });
+
+  // ── قسم 1: إجماليات الطلاب ──
+  doc.setTextColor(34, 211, 238);
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
-  doc.text('Summary Statistics', 14, 52);
-
-  const kpiData = [
-    ['Total Sessions', `${stats.totalStudents} students`],
-    ['Pre-Test Average', `${avgPrePercent}%`],
-    ['Post-Test Average', `${avgPostPercent}%`],
-    ['Average Improvement', `+${avgImprovement}%`],
-    ['Funnel Completion Rate', `${stats.funnel.started > 0 ? Math.round((stats.funnel.postDone / stats.funnel.started) * 100) : 0}%`],
-  ];
+  doc.text('1. Student Summary', 14, 72);
 
   autoTable(doc, {
-    startY: 56,
+    startY: 76,
     head: [['Metric', 'Value']],
-    body: kpiData,
-    theme: 'striped',
-    headStyles: { fillColor: [15, 118, 163], textColor: 255, fontStyle: 'bold' },
+    body: [
+      ['Total Registered Students', `${stats.totalStudents}`],
+      ['Completed Pre-Assessment', `${stats.funnel.preDone}`],
+      ['Completed Post-Assessment', `${stats.funnel.postDone}`],
+      ['Dropped Out (Did Not Complete)', `${stats.funnel.started - stats.funnel.postDone}`],
+      ['Journey Completion Rate', `${funnelRate}%`],
+      ['Overall Pre-Test Average', `${avgPrePercent}%`],
+      ['Overall Post-Test Average', `${avgPostPercent}%`],
+      ['Average Improvement After Lesson', `${avgImprovement > 0 ? '+' : ''}${avgImprovement}%`],
+    ],
+    theme: 'grid',
+    headStyles: { fillColor: [15, 118, 163], textColor: 255, fontStyle: 'bold', fontSize: 10 },
+    bodyStyles: { fontSize: 9, textColor: [30, 41, 59] },
     alternateRowStyles: { fillColor: [241, 245, 249] },
+    columnStyles: { 0: { cellWidth: 120 }, 1: { cellWidth: 60, halign: 'center', fontStyle: 'bold' } },
   });
+
+  // ── قسم 2: تحليل مستويات الصعوبة ──
   doc.addPage();
-  doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, 210, 20, 'F');
-  doc.setTextColor(255, 255, 255);
+  doc.setFillColor(10, 15, 40);
+  doc.rect(0, 0, 210, 297, 'F');
+  doc.setTextColor(34, 211, 238);
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
-  doc.text('Question-by-Question Analysis', 105, 13, { align: 'center' });
+  doc.text('2. Performance by Difficulty Level', 14, 20);
 
-  const qRows = stats.questionsStats.map((q, i) => [
-    `Q${i + 1}`,
-    (q.question?.ar || q.question || '').substring(0, 60),
-    `${q.preStats.percent}%`,
-    `${q.preStats.correct}/${q.preStats.total}`,
-    `${q.postStats.percent}%`,
-    `${q.postStats.correct}/${q.postStats.total}`,
-    q.improvement > 0 ? `+${q.improvement}%` : `${q.improvement}%`,
-  ]);
+  const catRows = ['A', 'B', 'C'].map(cat => {
+    const s = categoryStats[cat];
+    const label = cat === 'A' ? 'A — Easy' : cat === 'B' ? 'B — Medium' : 'C — Hard';
+    if (!s) return [label, '0', '0%', '0%', '0%', '0%', '0%'];
+    return [
+      label,
+      `${s.count}`,
+      `${s.avgPre}%`,
+      `${100 - s.avgPre}%`,
+      `${s.avgPost}%`,
+      `${100 - s.avgPost}%`,
+      `${s.improvement > 0 ? '+' : ''}${s.improvement}%`,
+    ];
+  });
 
   autoTable(doc, {
-    startY: 24,
-    head: [['#', 'Question', 'Pre %', 'Pre Correct', 'Post %', 'Post Correct', 'Δ']],
-    body: qRows,
+    startY: 25,
+    head: [['Level', 'Questions', 'Correct Pre', 'Wrong Pre', 'Correct Post', 'Wrong Post', 'Improvement']],
+    body: catRows,
     theme: 'grid',
     headStyles: { fillColor: [15, 118, 163], textColor: 255, fontStyle: 'bold', fontSize: 9 },
-    bodyStyles: { fontSize: 8 },
-    columnStyles: {
-      0: { cellWidth: 8 },
-      1: { cellWidth: 70 },
-      2: { cellWidth: 18 },
-      3: { cellWidth: 22 },
-      4: { cellWidth: 18 },
-      5: { cellWidth: 22 },
-      6: { cellWidth: 18 },
-    },
+    bodyStyles: { fontSize: 9, textColor: [30, 41, 59] },
+    alternateRowStyles: { fillColor: [241, 245, 249] },
     didParseCell: (data) => {
       if (data.section === 'body' && data.column.index === 6) {
         const val = parseFloat(data.cell.text[0]);
@@ -166,77 +176,256 @@ async function exportToPDF(stats, avgPrePercent, avgPostPercent, avgImprovement)
     }
   });
 
-  doc.save(`analytics_report_${Date.now()}.pdf`);
+  // ── قسم 3: التصنيفات ──
+  const qs = stats.questionsStats;
+  const topPreCorrect = [...qs].sort((a, b) => b.preStats.percent - a.preStats.percent).slice(0, 5);
+  const topPostCorrect = [...qs].sort((a, b) => b.postStats.percent - a.postStats.percent).slice(0, 5);
+  const mostWrongPre = [...qs].sort((a, b) => a.preStats.percent - b.preStats.percent).slice(0, 5);
+  const mostWrongPost = [...qs].sort((a, b) => a.postStats.percent - b.postStats.percent).slice(0, 5);
+  const mostImproved = [...qs].sort((a, b) => b.improvement - a.improvement).slice(0, 5);
+
+  const addRankTable = (title, rows, y) => {
+    doc.setTextColor(34, 211, 238);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, 14, y);
+    autoTable(doc, {
+      startY: y + 4,
+      head: [['#', 'Question', 'Level', 'Value']],
+      body: rows,
+      theme: 'striped',
+      headStyles: { fillColor: [15, 118, 163], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+      bodyStyles: { fontSize: 7.5, textColor: [30, 41, 59] },
+      alternateRowStyles: { fillColor: [241, 245, 249] },
+      columnStyles: { 0: { cellWidth: 8 }, 1: { cellWidth: 120 }, 2: { cellWidth: 22 }, 3: { cellWidth: 22, halign: 'center' } },
+    });
+    return doc.lastAutoTable.finalY + 8;
+  };
+
+  doc.addPage();
+  doc.setFillColor(10, 15, 40);
+  doc.rect(0, 0, 210, 297, 'F');
+  doc.setTextColor(34, 211, 238);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text('3. Question Rankings', 14, 16);
+
+  let y = 22;
+  y = addRankTable('Top 5 — Highest Correct (Pre-Test)', topPreCorrect.map((q, i) => [
+    i + 1,
+    `Question #${stats.questionsStats.indexOf(q) + 1}`,
+    q.category === 'A' ? 'Easy' : q.category === 'B' ? 'Medium' : 'Hard',
+    `${q.preStats.percent}%`
+  ]), y);
+  y = addRankTable('Top 5 — Highest Correct (Post-Test)', topPostCorrect.map((q, i) => [
+    i + 1,
+    `Question #${stats.questionsStats.indexOf(q) + 1}`,
+    q.category === 'A' ? 'Easy' : q.category === 'B' ? 'Medium' : 'Hard',
+    `${q.postStats.percent}%`
+  ]), y);
+  y = addRankTable('Top 5 — Most Wrong (Pre-Test)', mostWrongPre.map((q, i) => [
+    i + 1,
+    `Question #${stats.questionsStats.indexOf(q) + 1}`,
+    q.category === 'A' ? 'Easy' : q.category === 'B' ? 'Medium' : 'Hard',
+    `${100 - q.preStats.percent}%`
+  ]), y);
+
+  doc.addPage();
+  doc.setFillColor(10, 15, 40);
+  doc.rect(0, 0, 210, 297, 'F');
+  y = 16;
+  y = addRankTable('Top 5 — Most Wrong (Post-Test / Needs Review)', mostWrongPost.map((q, i) => [
+    i + 1,
+    `Question #${stats.questionsStats.indexOf(q) + 1}`,
+    q.category === 'A' ? 'Easy' : q.category === 'B' ? 'Medium' : 'Hard',
+    `${100 - q.postStats.percent}%`
+  ]), y);
+  y = addRankTable('Top 5 — Most Improved After Lesson', mostImproved.map((q, i) => [
+    i + 1,
+    `Question #${stats.questionsStats.indexOf(q) + 1}`,
+    q.category === 'A' ? 'Easy' : q.category === 'B' ? 'Medium' : 'Hard',
+    `+${q.improvement}%`
+  ]), y);
+  // ── قسم 4: جميع الأسئلة ──
+  doc.addPage();
+  doc.setFillColor(10, 15, 40);
+  doc.rect(0, 0, 210, 297, 'F');
+  doc.setTextColor(34, 211, 238);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text('4. All Questions — Full Detail', 14, 16);
+
+  autoTable(doc, {
+    startY: 21,
+    head: [['#', 'Question', 'Lvl', 'Pre%', 'Pre✓', 'Pre✗', 'Post%', 'Post✓', 'Post✗', 'Δ']],
+    body: stats.questionsStats.map((q, i) => [
+      i + 1,
+      `Question #${i + 1}`,
+      q.category === 'A' ? 'E' : q.category === 'B' ? 'M' : 'H',
+      `${q.preStats.percent}%`,
+      q.preStats.correct,
+      q.preStats.total - q.preStats.correct,
+      `${q.postStats.percent}%`,
+      q.postStats.correct,
+      q.postStats.total - q.postStats.correct,
+      `${q.improvement > 0 ? '+' : ''}${q.improvement}%`,
+    ]),
+    theme: 'grid',
+    headStyles: { fillColor: [15, 118, 163], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+    bodyStyles: { fontSize: 7, textColor: [30, 41, 59] },
+    alternateRowStyles: { fillColor: [241, 245, 249] },
+    columnStyles: {
+      0: { cellWidth: 7 }, 1: { cellWidth: 68 }, 2: { cellWidth: 8 },
+      3: { cellWidth: 14, halign: 'center' }, 4: { cellWidth: 12, halign: 'center' },
+      5: { cellWidth: 12, halign: 'center' }, 6: { cellWidth: 14, halign: 'center' },
+      7: { cellWidth: 12, halign: 'center' }, 8: { cellWidth: 12, halign: 'center' },
+      9: { cellWidth: 14, halign: 'center' },
+    },
+    didParseCell: (data) => {
+      if (data.section === 'body' && data.column.index === 9) {
+        const val = parseFloat(data.cell.text[0]);
+        if (val > 0) data.cell.styles.textColor = [16, 185, 129];
+        else if (val < 0) data.cell.styles.textColor = [239, 68, 68];
+      }
+    }
+  });
+
+  doc.save(`تقرير_نظام_الذكاء_البحثي_${Date.now()}.pdf`);
 }
 
-async function exportToExcel(stats, avgPrePercent, avgPostPercent, avgImprovement) {
+async function exportToExcel(stats, avgPrePercent, avgPostPercent, avgImprovement, categoryStats) {
   const XLSX = await import('xlsx');
-
   const wb = XLSX.utils.book_new();
+  const now = new Date().toLocaleDateString('ar-EG');
+  const funnelRate = stats.funnel.started > 0 ? Math.round((stats.funnel.postDone / stats.funnel.started) * 100) : 0;
+
+  // ── ورقة 1: الملخص التنفيذي ──
   const summaryData = [
-    ['Analytics Dashboard Report'],
-    [`Generated: ${new Date().toLocaleDateString('ar-EG')}`],
+    ['التقرير الرسمي لنظام استكشاف الذكاء البحثي'],
+    [`تاريخ الإصدار: ${now}`],
     [],
-    ['Metric', 'Value'],
-    ['Total Students', stats.totalStudents],
-    ['Students who completed Pre-Test', stats.funnel.preDone],
-    ['Students who completed Post-Test', stats.funnel.postDone],
-    ['Overall Pre-Test Average', `${avgPrePercent}%`],
-    ['Overall Post-Test Average', `${avgPostPercent}%`],
-    ['Average Improvement', `${avgImprovement > 0 ? '+' : ''}${avgImprovement}%`],
-    ['Funnel Completion Rate', `${stats.funnel.started > 0 ? Math.round((stats.funnel.postDone / stats.funnel.started) * 100) : 0}%`],
+    ['أولاً: إجماليات الطلاب', ''],
+    ['إجمالي الطلاب المسجلين في النظام', stats.totalStudents],
+    ['الطلاب الذين أنهوا التقييم المبدئي', stats.funnel.preDone],
+    ['الطلاب الذين شاهدوا الفيديو التعليمي', stats.funnel.preDone],
+    ['الطلاب الذين أتموا التقييم النهائي', stats.funnel.postDone],
+    ['الطلاب الذين تسربوا (لم يكملوا)', stats.funnel.started - stats.funnel.postDone],
+    ['معدل إتمام الرحلة الكاملة', `${funnelRate}%`],
+    [],
+    ['ثانياً: المتوسطات العامة', ''],
+    ['متوسط الإجابات الصحيحة — قبل الشرح', `${avgPrePercent}%`],
+    ['متوسط الإجابات الصحيحة — بعد الشرح', `${avgPostPercent}%`],
+    ['متوسط التحسن بعد الشرح', `${avgImprovement > 0 ? '+' : ''}${avgImprovement}%`],
+    ['إجمالي الأسئلة', stats.questionsStats.length],
+    ['أسئلة تحسّن أداؤها', stats.questionsStats.filter(q => q.improvement > 0).length],
+    ['أسئلة تراجع أداؤها', stats.questionsStats.filter(q => q.improvement < 0).length],
+    ['أسئلة بلا تغيير', stats.questionsStats.filter(q => q.improvement === 0).length],
   ];
   const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
-  wsSummary['!cols'] = [{ wch: 35 }, { wch: 20 }];
-  XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
-  const qHeader = ['#', 'Question (AR)', 'Pre-Test %', 'Pre Correct', 'Pre Total', 'Post-Test %', 'Post Correct', 'Post Total', 'Improvement'];
-  const qRows = stats.questionsStats.map((q, i) => [
-    i + 1,
-    q.question?.ar || q.question || '',
-    q.preStats.percent,
-    q.preStats.correct,
-    q.preStats.total,
-    q.postStats.percent,
-    q.postStats.correct,
-    q.postStats.total,
-    q.improvement,
+  wsSummary['!cols'] = [{ wch: 45 }, { wch: 20 }];
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'الملخص التنفيذي');
+
+  const catData = [
+    ['تحليل الأداء حسب مستوى الصعوبة'],
+    [],
+    ['المستوى', 'عدد الأسئلة', 'صح قبل الشرح %', 'عدد الصح قبل', 'غلط قبل الشرح %', 'عدد الغلط قبل', 'صح بعد الشرح %', 'عدد الصح بعد', 'غلط بعد الشرح %', 'عدد الغلط بعد', 'التحسن'],
+
+  ];
+  ['A', 'B', 'C'].forEach(cat => {
+    const label = cat === 'A' ? 'A — سهل' : cat === 'B' ? 'B — متوسط' : 'C — صعب';
+    const s = categoryStats[cat];
+    if (s) {
+      const correctPreCount = Math.round((s.avgPre / 100) * s.count);
+      const correctPostCount = Math.round((s.avgPost / 100) * s.count);
+      const wrongPreCount = s.count - correctPreCount;
+      const wrongPostCount = s.count - correctPostCount;
+      catData.push([
+        label, s.count,
+        `${s.avgPre}%`, correctPreCount,
+        `${100 - s.avgPre}%`, wrongPreCount,
+        `${s.avgPost}%`, correctPostCount,
+        `${100 - s.avgPost}%`, wrongPostCount,
+        `${s.improvement > 0 ? '+' : ''}${s.improvement}%`,
+      ]);
+    }
+  });
+  catData.push([], [
+    'المتوسط الكلي', stats.questionsStats.length,
+    `${avgPrePercent}%`, Math.round((avgPrePercent / 100) * stats.questionsStats.length),
+    `${100 - avgPrePercent}%`, Math.round(((100 - avgPrePercent) / 100) * stats.questionsStats.length),
+    `${avgPostPercent}%`, Math.round((avgPostPercent / 100) * stats.questionsStats.length),
+    `${100 - avgPostPercent}%`, Math.round(((100 - avgPostPercent) / 100) * stats.questionsStats.length),
+    `${avgImprovement > 0 ? '+' : ''}${avgImprovement}%`,
   ]);
-  const wsQuestions = XLSX.utils.aoa_to_sheet([qHeader, ...qRows]);
-  wsQuestions['!cols'] = [{ wch: 5 }, { wch: 60 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }];
-  XLSX.utils.book_append_sheet(wb, wsQuestions, 'Questions Detail');
-  const sorted = [...stats.questionsStats];
-  const topPre = [...sorted].sort((a, b) => b.preStats.percent - a.preStats.percent).slice(0, 5);
-  const topPost = [...sorted].sort((a, b) => b.postStats.percent - a.postStats.percent).slice(0, 5);
-  const topImprovement = [...sorted].sort((a, b) => b.improvement - a.improvement).slice(0, 5);
-  const needsAttention = [...sorted].sort((a, b) => a.postStats.percent - b.postStats.percent).slice(0, 5);
+  const wsCat = XLSX.utils.aoa_to_sheet(catData);
+  wsCat['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 14 }, { wch: 16 }, { wch: 14 }, { wch: 16 }, { wch: 14 }, { wch: 16 }, { wch: 14 }, { wch: 12 }];
+
+  XLSX.utils.book_append_sheet(wb, wsCat, 'تحليل مستويات الصعوبة');
+  const qHeader = ['#', 'السؤال', 'المستوى', 'صح قبل %', 'صح قبل عدد', 'غلط قبل عدد', 'إجمالي قبل', 'صح بعد %', 'صح بعد عدد', 'غلط بعد عدد', 'إجمالي بعد', 'التحسن'];
+  const qRows = stats.questionsStats.map((q, i) => {
+    const cat = q.category || 'A';
+    const catLabel = cat === 'A' ? 'سهل' : cat === 'B' ? 'متوسط' : 'صعب';
+    return [
+      i + 1,
+      q.question?.ar || q.question || '',
+      catLabel,
+      q.preStats.percent,
+      q.preStats.correct,
+      q.preStats.total - q.preStats.correct,
+      q.preStats.total,
+      q.postStats.percent,
+      q.postStats.correct,
+      q.postStats.total - q.postStats.correct,
+      q.postStats.total,
+      q.improvement,
+    ];
+  });
+  const wsQ = XLSX.utils.aoa_to_sheet([qHeader, ...qRows]);
+  wsQ['!cols'] = [{ wch: 4 }, { wch: 55 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 }];
+  XLSX.utils.book_append_sheet(wb, wsQ, 'تفاصيل الأسئلة');
+
+  // ── ورقة 4: التصنيفات والمؤشرات ──
+  const qs = stats.questionsStats;
+  const topPreCorrect = [...qs].sort((a, b) => b.preStats.percent - a.preStats.percent).slice(0, 5);
+  const topPostCorrect = [...qs].sort((a, b) => b.postStats.percent - a.postStats.percent).slice(0, 5);
+  const mostWrongPre = [...qs].sort((a, b) => a.preStats.percent - b.preStats.percent).slice(0, 5);
+  const mostWrongPost = [...qs].sort((a, b) => a.postStats.percent - b.postStats.percent).slice(0, 5);
+  const mostImproved = [...qs].sort((a, b) => b.improvement - a.improvement).slice(0, 5);
 
   const rankData = [
-    ['Top 5 — Highest Pre-Test Score'],
-    ['Question', 'Pre %'],
-    ...topPre.map(q => [q.question?.ar || q.question || '', q.preStats.percent]),
+    ['التصنيفات والمؤشرات'],
     [],
-    ['Top 5 — Highest Post-Test Score'],
-    ['Question', 'Post %'],
-    ...topPost.map(q => [q.question?.ar || q.question || '', q.postStats.percent]),
+    ['أعلى 5 أسئلة إجابة صحيحة — قبل الشرح'],
+    ['#', 'السؤال', 'المستوى', 'نسبة الصح'],
+    ...topPreCorrect.map((q, i) => [i + 1, q.question?.ar || q.question || '', q.category === 'A' ? 'سهل' : q.category === 'B' ? 'متوسط' : 'صعب', `${q.preStats.percent}%`]),
     [],
-    ['Top 5 — Biggest Improvement'],
-    ['Question', 'Improvement'],
-    ...topImprovement.map(q => [q.question?.ar || q.question || '', q.improvement]),
+    ['أعلى 5 أسئلة إجابة صحيحة — بعد الشرح'],
+    ['#', 'السؤال', 'المستوى', 'نسبة الصح'],
+    ...topPostCorrect.map((q, i) => [i + 1, q.question?.ar || q.question || '', q.category === 'A' ? 'سهل' : q.category === 'B' ? 'متوسط' : 'صعب', `${q.postStats.percent}%`]),
     [],
-    ['Top 5 — Needs Attention (Lowest Post-Test)'],
-    ['Question', 'Post %'],
-    ...needsAttention.map(q => [q.question?.ar || q.question || '', q.postStats.percent]),
+    ['أكثر 5 أسئلة إجابة خاطئة — قبل الشرح'],
+    ['#', 'السؤال', 'المستوى', 'نسبة الغلط'],
+    ...mostWrongPre.map((q, i) => [i + 1, q.question?.ar || q.question || '', q.category === 'A' ? 'سهل' : q.category === 'B' ? 'متوسط' : 'صعب', `${100 - q.preStats.percent}%`]),
+    [],
+    ['أكثر 5 أسئلة إجابة خاطئة — بعد الشرح (تحتاج مراجعة)'],
+    ['#', 'السؤال', 'المستوى', 'نسبة الغلط'],
+    ...mostWrongPost.map((q, i) => [i + 1, q.question?.ar || q.question || '', q.category === 'A' ? 'سهل' : q.category === 'B' ? 'متوسط' : 'صعب', `${100 - q.postStats.percent}%`]),
+    [],
+    ['أكثر 5 أسئلة تحسناً بعد الشرح'],
+    ['#', 'السؤال', 'المستوى', 'قبل', 'بعد', 'التحسن'],
+    ...mostImproved.map((q, i) => [i + 1, q.question?.ar || q.question || '', q.category === 'A' ? 'سهل' : q.category === 'B' ? 'متوسط' : 'صعب', `${q.preStats.percent}%`, `${q.postStats.percent}%`, `+${q.improvement}%`]),
   ];
-  const wsRankings = XLSX.utils.aoa_to_sheet(rankData);
-  wsRankings['!cols'] = [{ wch: 70 }, { wch: 15 }];
-  XLSX.utils.book_append_sheet(wb, wsRankings, 'Rankings');
+  const wsRank = XLSX.utils.aoa_to_sheet(rankData);
+  wsRank['!cols'] = [{ wch: 4 }, { wch: 60 }, { wch: 10 }, { wch: 12 }, { wch: 12 }, { wch: 12 }];
+  XLSX.utils.book_append_sheet(wb, wsRank, 'التصنيفات والمؤشرات');
 
-  XLSX.writeFile(wb, `analytics_report_${Date.now()}.xlsx`);
+  XLSX.writeFile(wb, `تقرير_نظام_الذكاء_البحثي_${Date.now()}.xlsx`);
 }
 export default function AnalyticsDashboard() {
   const [loading, setLoading] = useState(true);
-  const [exporting, setExporting] = useState(null); // 'pdf' | 'excel' | null
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'questions' | 'rankings'
+  const [exporting, setExporting] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [categoryStats, setCategoryStats] = useState({ A: null, B: null, C: null });
   const [stats, setStats] = useState({
     totalStudents: 0,
     funnel: { started: 0, preDone: 0, postDone: 0 },
@@ -285,6 +474,18 @@ export default function AnalyticsDashboard() {
         });
 
         setStats({ totalStudents, funnel: { started: totalStudents, preDone, postDone }, questionsStats: analyzedQuestions });
+        const cats = { A: [], B: [], C: [] };
+        analyzedQuestions.forEach(q => {
+          const c = q.category || 'A';
+          if (cats[c]) cats[c].push(q);
+        });
+        const buildCatStats = (arr) => ({
+          count: arr.length,
+          avgPre: arr.length > 0 ? Math.round(arr.reduce((a, q) => a + q.preStats.percent, 0) / arr.length) : 0,
+          avgPost: arr.length > 0 ? Math.round(arr.reduce((a, q) => a + q.postStats.percent, 0) / arr.length) : 0,
+          improvement: arr.length > 0 ? Math.round(arr.reduce((a, q) => a + q.improvement, 0) / arr.length) : 0,
+        });
+        setCategoryStats({ A: buildCatStats(cats.A), B: buildCatStats(cats.B), C: buildCatStats(cats.C) });
       } catch (err) {
         console.error('Analytics fetch error:', err);
       }
@@ -309,8 +510,8 @@ export default function AnalyticsDashboard() {
   const handleExport = async (type) => {
     setExporting(type);
     try {
-      if (type === 'pdf') await exportToPDF(stats, avgPrePercent, avgPostPercent, avgImprovement);
-      else await exportToExcel(stats, avgPrePercent, avgPostPercent, avgImprovement);
+      if (type === 'pdf') await exportToPDF(stats, avgPrePercent, avgPostPercent, avgImprovement, categoryStats);
+      else await exportToExcel(stats, avgPrePercent, avgPostPercent, avgImprovement, categoryStats);
     } catch (e) {
       console.error('Export error:', e);
       alert(`فشل التصدير: ${e.message}`);
@@ -371,17 +572,15 @@ export default function AnalyticsDashboard() {
           <button
             key={t.id}
             onClick={() => setActiveTab(t.id)}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-all ${
-              activeTab === t.id
-                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.15)]'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-all ${activeTab === t.id
+              ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.15)]'
+              : 'text-slate-400 hover:text-slate-200'
+              }`}
           >
             {t.label}
           </button>
         ))}
       </div>
-
       {/* ══════════════════ TAB: OVERVIEW ══════════════════ */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
@@ -413,7 +612,7 @@ export default function AnalyticsDashboard() {
               <Icon.Chart /> مقارنة الأداء الإجمالي: قبل الشرح vs بعد الشرح
             </h3>
             <div className="flex flex-col md:flex-row items-center gap-8">
-              
+
               {/* Circles */}
               <div className="flex items-center gap-8 flex-shrink-0">
                 <CircularProgress percent={avgPrePercent} size={110} strokeWidth={10} color="#64748b" label="قبل الشرح" sublabel={`متوسط ${avgPrePercent}%`} />
@@ -469,7 +668,7 @@ export default function AnalyticsDashboard() {
               <Icon.Filter /> مسار الطلاب ومعدلات التسرب
             </h3>
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 relative">
-              
+
               {[
                 { count: stats.funnel.started, label: 'فتحوا النظام', sub: '100%', color: 'border-cyan-500', shadow: 'shadow-[0_0_20px_rgba(6,182,212,0.3)]', glyph: '🚀' },
                 { count: stats.funnel.preDone, label: 'أنهوا التقييم المبدئي', sub: `${stats.funnel.started > 0 ? Math.round((stats.funnel.preDone / stats.funnel.started) * 100) : 0}%`, color: 'border-blue-500', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.3)]', glyph: '📝' },
@@ -520,9 +719,52 @@ export default function AnalyticsDashboard() {
               ))}
             </div>
           </div>
+
+          {/* Category Performance */}
+          <div className="glass-card rounded-2xl p-6 border border-slate-700/50">
+            <h3 className="text-base font-bold text-white mb-5 flex items-center gap-2">
+              <Icon.Chart /> الأداء حسب الفئة
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {['A', 'B', 'C'].map(cat => {
+                const s = categoryStats[cat];
+                if (!s) return null;
+                return (
+                  <div key={cat} className="bg-slate-800/60 rounded-2xl p-4 border border-slate-700/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-white font-black text-lg">فئة {cat}</span>
+                      <span className="text-slate-500 text-xs">{s.count} سؤال</span>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-slate-400">قبل الشرح</span>
+                          <span className="text-slate-300 font-bold">{s.avgPre}%</span>
+                        </div>
+                        <ProgressBar percent={s.avgPre} color="bg-slate-500" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-cyan-400">بعد الشرح</span>
+                          <span className="text-cyan-300 font-bold">{s.avgPost}%</span>
+                        </div>
+                        <ProgressBar percent={s.avgPost} color="bg-gradient-to-l from-cyan-400 to-blue-500" glow />
+                      </div>
+                      <div className={`text-center py-2 rounded-xl font-black text-sm ${s.improvement > 0 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        : s.improvement < 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                          : 'bg-slate-700/50 text-slate-400'
+                        }`}>
+                        {s.improvement > 0 ? '▲' : s.improvement < 0 ? '▼' : '—'} {Math.abs(s.improvement)}% تطور
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
       )}
-
       {/* ══════════════════ TAB: QUESTIONS ══════════════════ */}
       {activeTab === 'questions' && (
         <div className="space-y-4">
@@ -533,18 +775,17 @@ export default function AnalyticsDashboard() {
           ) : (
             qs.map((q, index) => (
               <div key={q.id} className="glass-card p-5 rounded-2xl border border-slate-700/50 hover:border-slate-600 transition-all">
-                
+
                 {/* Header */}
                 <div className="flex justify-between items-start gap-4 mb-5 pb-4 border-b border-slate-800">
                   <div className="flex-1">
                     <span className="text-xs font-bold text-cyan-500 bg-cyan-500/10 px-2 py-0.5 rounded-md mb-2 inline-block">سؤال {index + 1}</span>
                     <h4 className="text-white font-semibold text-sm leading-relaxed">{q.question?.ar || q.question}</h4>
                   </div>
-                  <div className={`px-3 py-1.5 rounded-xl text-sm font-black flex-shrink-0 ${
-                    q.improvement > 0 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
+                  <div className={`px-3 py-1.5 rounded-xl text-sm font-black flex-shrink-0 ${q.improvement > 0 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
                     : q.improvement < 0 ? 'bg-red-500/15 text-red-400 border border-red-500/25'
-                    : 'bg-slate-700/50 text-slate-400 border border-slate-600/50'
-                  }`}>
+                      : 'bg-slate-700/50 text-slate-400 border border-slate-600/50'
+                    }`}>
                     {q.improvement > 0 ? '▲' : q.improvement < 0 ? '▼' : '—'} {Math.abs(q.improvement)}%
                   </div>
                 </div>
@@ -608,9 +849,45 @@ export default function AnalyticsDashboard() {
       {activeTab === 'rankings' && (
         <div className="space-y-6">
 
+          {/* Category Comparison */}
+          <div className="glass-card rounded-2xl p-5 border border-slate-700/50">
+            <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <Icon.Chart /> مقارنة الفئات A / B / C
+            </h4>
+            <div className="space-y-4">
+              {['A', 'B', 'C'].map(cat => {
+                const s = categoryStats[cat];
+                if (!s) return null;
+                return (
+                  <div key={cat} className="flex items-center gap-4">
+                    <span className="w-14 text-center py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white font-black text-sm flex-shrink-0">
+                      فئة {cat}
+                    </span>
+                    <div className="flex-1 space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-slate-500 w-16 flex-shrink-0">قبل</span>
+                        <ProgressBar percent={s.avgPre} color="bg-slate-500" height="h-2" />
+                        <span className="text-xs text-slate-300 font-bold w-10 flex-shrink-0">{s.avgPre}%</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-cyan-500 w-16 flex-shrink-0">بعد</span>
+                        <ProgressBar percent={s.avgPost} color="bg-gradient-to-l from-cyan-400 to-blue-500" height="h-2" />
+                        <span className="text-xs text-cyan-300 font-bold w-10 flex-shrink-0">{s.avgPost}%</span>
+                      </div>
+                    </div>
+                    <span className={`text-sm font-black flex-shrink-0 ${s.improvement > 0 ? 'text-emerald-400' : s.improvement < 0 ? 'text-red-400' : 'text-slate-400'
+                      }`}>
+                      {s.improvement > 0 ? '+' : ''}{s.improvement}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* GRID: Top Correct + Top Wrong */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            
+
             {/* Highest Correct PRE */}
             <div className="glass-card rounded-2xl p-5 border border-slate-700/50">
               <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">

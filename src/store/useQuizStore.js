@@ -12,18 +12,32 @@ export const useQuizStore = create(
       studentId: null,
       currentStep: 0,
       theme: 'dark',
+      isBlocked: false,
+
 
       toggleLanguage: () => set((state) => ({ lang: state.lang === 'ar' ? 'en' : 'ar' })),
       toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
+      setIsBlocked: (val) => set({ isBlocked: val }),
 
       startSession: async () => {
         try {
-          let currentStudentId = get().studentId;
+          const { getDocs, collection } = await import('firebase/firestore');
+          const snap = await getDocs(collection(db, 'sessions'));
+
+          const existingId = get().studentId;
+          const alreadyRegistered = existingId && snap.docs.some(d => d.id === existingId);
+
+          if (!alreadyRegistered && snap.size >= 300) {
+            set({ isBlocked: true });
+            return;
+          }
+
+          let currentStudentId = existingId;
           if (!currentStudentId) {
             currentStudentId = generateStudentId();
             set({ studentId: currentStudentId });
           }
-          set({ currentStep: 1 }); // ← انتقل فوراً قبل أي network
+          set({ currentStep: 1 });
 
           await signInAnonymously(auth);
 
@@ -44,11 +58,8 @@ export const useQuizStore = create(
             const savedVersion = savedData.contentVersion || '';
 
             if (savedData.currentStep === 4 && savedVersion === '' && latestVersion !== '') {
-              await setDoc(userRef, {
-                contentVersion: latestVersion,
-              }, { merge: true });
+              await setDoc(userRef, { contentVersion: latestVersion }, { merge: true });
               set({ currentStep: 4 });
-
             } else if (latestVersion !== '' && savedVersion !== latestVersion && savedData.currentStep === 4) {
               await setDoc(userRef, {
                 currentStep: 1,
@@ -56,7 +67,6 @@ export const useQuizStore = create(
                 lastUpdate: new Date().toISOString()
               }, { merge: true });
               set({ currentStep: 1 });
-
             } else {
               set({ currentStep: savedData.currentStep || 1 });
             }

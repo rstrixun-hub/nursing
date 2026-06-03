@@ -299,10 +299,12 @@ export default function ResultsScreen() {
                                         </span>
                                         <div>
                                             <span style={{ fontSize: 13, fontWeight: 800, color: preIsCorrect ? '#10b981' : '#f87171' }}>
-                                                {preAns ? getLabel(preAns) : '—'}
+                                                {preAns ? getLabel(answerToIndex(preAns)) : '—'}
+
                                             </span>
                                             {preAns && (
-                                                <p className="result-opt-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{getOptionText(preAns)}</p>
+                                                <p className="result-opt-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{getOptionText(answerToIndex(preAns))}
+                                                </p>
                                             )}
                                         </div>
                                     </div>
@@ -322,10 +324,11 @@ export default function ResultsScreen() {
                                         </span>
                                         <div>
                                             <span style={{ fontSize: 13, fontWeight: 800, color: postIsCorrect ? '#10b981' : '#f87171' }}>
-                                                {postAns ? getLabel(postAns) : '—'}
+                                                {postAns ? getLabel(answerToIndex(postAns)) : '—'}
                                             </span>
                                             {postAns && (
-                                                <p className="result-opt-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{getOptionText(postAns)}</p>
+                                                <p className="result-opt-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{getOptionText(answerToIndex(postAns))}
+                                                </p>
                                             )}
                                         </div>
                                     </div>

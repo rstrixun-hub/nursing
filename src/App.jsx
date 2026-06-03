@@ -376,7 +376,8 @@ function StatsCircles({ lang, theme }) {
    MAIN APP
 ══════════════════════════════════════════════ */
 export default function App() {
-  const { lang, currentStep, toggleLanguage, startSession, setStep, theme, toggleTheme } = useQuizStore();
+  const { lang, currentStep, toggleLanguage, startSession, setStep, theme, toggleTheme, isBlocked, setIsBlocked } = useQuizStore();
+
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -810,6 +811,90 @@ export default function App() {
           </span>
         </p>
       </div>
+
+      {isBlocked && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'rgba(0,0,0,0.75)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+          animation: 'fadeUp 0.3s ease both',
+        }}>
+          <div style={{
+            background: isLight ? 'rgba(255,255,255,0.97)' : 'rgba(10,15,30,0.97)',
+            border: `1px solid ${isLight ? 'rgba(239,68,68,0.3)' : 'rgba(239,68,68,0.4)'}`,
+            borderRadius: 24,
+            padding: '40px 32px',
+            maxWidth: 400,
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 0 60px rgba(239,68,68,0.2), 0 20px 60px rgba(0,0,0,0.5)',
+          }}>
+            <div style={{
+              width: 80, height: 80, borderRadius: '50%',
+              background: 'rgba(239,68,68,0.1)',
+              border: '2px solid rgba(239,68,68,0.3)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 20px',
+              fontSize: 36,
+            }}>
+              🔒
+            </div>
+            <h2 style={{
+              fontSize: 22, fontWeight: 900,
+              color: '#ef4444',
+              marginBottom: 12,
+              lineHeight: 1.4,
+            }}>
+              {lang === 'ar' ? 'اكتمل العدد المسموح به' : 'Registration Closed'}
+            </h2>
+            <p style={{
+              fontSize: 14,
+              color: isLight ? '#475569' : '#94a3b8',
+              lineHeight: 1.8,
+              marginBottom: 8,
+            }}>
+              {lang === 'ar'
+                ? 'عذراً، لقد وصل عدد المشاركين إلى الحد الأقصى المسموح به'
+                : 'Sorry, the maximum number of participants has been reached.'}
+            </p>
+            <div style={{
+              display: 'inline-block',
+              background: 'rgba(239,68,68,0.1)',
+              border: '1px solid rgba(239,68,68,0.25)',
+              borderRadius: 999,
+              padding: '6px 18px',
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#ef4444',
+              marginBottom: 28,
+            }}>
+              300 / 300 {lang === 'ar' ? 'مشارك' : 'participants'}
+            </div>
+            <button
+              onClick={() => setIsBlocked(false)}
+              style={{
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 14,
+                padding: '12px 32px',
+                fontSize: 15,
+                fontWeight: 700,
+                cursor: 'pointer',
+                width: '100%',
+                boxShadow: '0 4px 20px rgba(239,68,68,0.4)',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.03)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+            >
+              {lang === 'ar' ? 'حسناً، فهمت' : 'Got it'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Bottom accent line */}
       <div style={{
